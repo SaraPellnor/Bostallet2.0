@@ -1,0 +1,219 @@
+[
+  {
+    "name": "Daniel",
+    "password": "123",
+    "email": "daniel.ahlquist@hotmail.com",
+    "mobile": "07304424444",
+    "weeks": [
+      {
+        "week": 15,
+        "pass": [
+          2,
+          1
+        ]
+      },
+      {
+        "week": 1,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 50,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 51,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 20,
+        "pass": [
+          1
+        ]
+      }
+    ],
+    "admin": true
+  },
+  {
+    "name": "Jenni",
+    "password": "123",
+    "email": "sara.ahlquist@hotmail.com",
+    "mobile": 730442444,
+    "weeks": [
+      {
+        "week": 15,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 1,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 3,
+        "pass": [
+          1,
+          2
+        ]
+      }
+    ],
+    "admin": false
+  },
+  {
+    "name": "Carin",
+    "password": "123",
+    "email": "sara.ahlquist@hotmail.com",
+    "mobile": 730442444,
+    "weeks": [
+      {
+        "week": 15,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 1,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 50,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 51,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 52,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 2,
+        "pass": [
+          1,
+          2
+        ]
+      }
+    ],
+    "admin": false
+  },
+  {
+    "name": "Marcus",
+    "password": "123",
+    "email": "sara.ahlquist@hotmail.com",
+    "mobile": 730442444,
+    "weeks": [
+      {
+        "week": 15,
+        "pass": [
+          2
+        ]
+      },
+      {
+        "week": 4,
+        "pass": [
+          1,
+          2
+        ]
+      }
+    ],
+    "admin": false
+  },
+  {
+    "name": "Joel",
+    "password": "123",
+    "email": "sara.ahlquist@hotmail.com",
+    "mobile": 730442444,
+    "weeks": [
+      {
+        "week": 50,
+        "pass": [
+          2
+        ]
+      },
+      {
+        "week": 1,
+        "pass": [
+          2
+        ]
+      }
+    ],
+    "admin": false
+  },
+  {
+    "admin": "true",
+    "name": "Sam PELLNOR",
+    "email": "sara.ahlquist@hotmail.com",
+    "mobile": "0730442444",
+    "weeks": []
+  },
+  {
+    "admin": "true",
+    "name": "Anders Pellnor",
+    "email": "faktura@golvalliansen.se",
+    "mobile": "0730442444",
+    "weeks": []
+  },
+  {
+    "admin": "true",
+    "name": "Sara Ahlquist Pellnor",
+    "email": "sara.ahlquist@hotmail.com",
+    "mobile": "0730442444",
+    "weeks": [
+      {
+        "week": 15,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 1,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 50,
+        "pass": [
+          1,
+          2
+        ]
+      },
+      {
+        "week": 51,
+        "pass": [
+          1,
+          2
+        ]
+      }
+    ]
+  }
+]
