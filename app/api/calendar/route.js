@@ -1,120 +1,118 @@
-import fs from "fs/promises";
+import clientPromise from "../../../lib/mongodb";
 
 export const GET = async (req) => {
   try {
-    // Läs JSON-filen
-    const filePath = process.cwd() + "/data/data.json";
-    const jsonData = await fs.readFile(filePath, "utf-8");
+    // Koppla till databasen
+    const client = await clientPromise;
+    const db = client.db("db");  // Använd din databasnamn här
+    const collection = db.collection("users");  // Använd din collection för användare
 
-    const data = JSON.parse(jsonData);
+    // Hämta alla användare från databasen
+    const data = await collection.find().toArray();
 
-    if (data) {
+    if (data.length > 0) {
       return new Response(JSON.stringify(data), { status: 200 });
     } else {
-      return new Response(JSON.stringify({ message: "Data hittades inte!" }), {
-        status: 404,
-      });
-    }
-  } catch (error) {
-    return new Response(
-      JSON.stringify({ error: "Fel vid läsning av filen." }),
-      { status: 500 }
-    );
-  }
-};
-
-export const PUT = async (req) => {
-  const { id, week, pass, action } = await req.json(); // action kan vara "add" eller "remove"
-
-  try {
-    // Läs JSON-filen
-    const filePath = process.cwd() + "/data/data.json";
-    const jsonData = await fs.readFile(filePath, "utf-8");
-
-    const data = JSON.parse(jsonData);
-    const user = data.find((item) => item.name === id);
-
-    if (user) {
-      // Hitta rätt vecka, eller skapa ny vecka om den inte finns
-      let weekObj = user.weeks.find((item) => item.week === week);
-
-      if (action === "remove") {
-        // Om åtgärden är att ta bort ett pass
-        if (weekObj) {
-          // Uppdatera pass-arrayen genom att ta bort det specifika passet
-          weekObj.pass = weekObj.pass.filter((number) => number !== pass);
-          if (weekObj.pass.length == 0) {
-            user.weeks = user.weeks.filter((item) => item.week !== week);
-          }
-          // Spara tillbaka den uppdaterade datan till filen
-          await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
-
-          return new Response(
-            JSON.stringify({ message: "Pass borttaget framgångsrikt." }),
-            { status: 200 }
-          );
-        } else {
-          return new Response(
-            JSON.stringify({ message: "Vecka inte hittad." }),
-            { status: 404 }
-          );
-        }
-      } else if (action === "add") {
-        // Om åtgärden är att lägga till en vecka
-        if (!weekObj) {
-          // Skapa en ny vecka om den inte finns
-          weekObj = { week: week, pass: [pass] };
-          user.weeks.push(weekObj);
-
-          // Spara tillbaka den uppdaterade datan till filen
-          await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
-
-          return new Response(
-            JSON.stringify({
-              message: "Vecka och pass tillagda framgångsrikt.",
-            }),
-            { status: 200 }
-          );
-        } else {
-          // Om veckan redan finns, lägg bara till passet om det inte redan finns
-          if (!weekObj.pass.includes(pass)) {
-            weekObj.pass.push(pass);
-            await fs.writeFile(
-              filePath,
-              JSON.stringify(data, null, 2),
-              "utf-8"
-            );
-            return new Response(
-              JSON.stringify({ message: "Pass tillagt framgångsrikt." }),
-              { status: 200 }
-            );
-          } else {
-            return new Response(
-              JSON.stringify({
-                message: "Passet finns redan för den här veckan.",
-              }),
-              { status: 400 }
-            );
-          }
-        }
-      } else {
-        return new Response(
-          JSON.stringify({
-            message: "Ogiltig åtgärd. Använd 'add' eller 'remove'.",
-          }),
-          { status: 400 }
-        );
-      }
-    } else {
       return new Response(
-        JSON.stringify({ message: "Användare hittades inte." }),
+        JSON.stringify({ message: "Data hittades inte!" }),
         { status: 404 }
       );
     }
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: "Fel vid läsning eller uppdatering av filen." }),
+      JSON.stringify({ error: "Fel vid anslutning till databasen eller hämtning av data." }),
       { status: 500 }
     );
   }
 };
+
+
+
+export const PUT = async (req) => {
+  const { name, week, pass, action } = await req.json();
+
+  try {
+    const client = await clientPromise;
+    const db = client.db("db");
+    const collection = db.collection("users");
+
+    const user = await collection.findOne({ name });
+
+    if (!user) {
+      return new Response(
+        JSON.stringify({ message: "Användare hittades inte." }),
+        { status: 404 }
+      );
+    }
+
+    const weekIndex = user.weeks.findIndex((w) => w.week === week);
+
+    if (action === "remove") {
+      if (weekIndex !== -1) {
+        const updatedPasses = user.weeks[weekIndex].pass.filter(
+          (p) => p !== pass
+        );
+
+        if (updatedPasses.length === 0) {
+          // Ta bort hela veckan
+          user.weeks.splice(weekIndex, 1);
+        } else {
+          // Uppdatera pass-listan
+          user.weeks[weekIndex].pass = updatedPasses;
+        }
+
+        await collection.updateOne({ name }, { $set: { weeks: user.weeks } });
+
+        return new Response(
+          JSON.stringify({ message: "Pass borttaget framgångsrikt." }),
+          { status: 200 }
+        );
+      } else {
+        return new Response(
+          JSON.stringify({ message: "Vecka inte hittad." }),
+          { status: 404 }
+        );
+      }
+    } else if (action === "add") {
+      if (weekIndex === -1) {
+        // Veckan finns inte, lägg till ny vecka med pass
+        user.weeks.push({ week, pass: [pass] });
+      } else {
+        const existingPasses = user.weeks[weekIndex].pass;
+        if (!existingPasses.includes(pass)) {
+          user.weeks[weekIndex].pass.push(pass);
+        } else {
+          return new Response(
+            JSON.stringify({
+              message: "Passet finns redan för den här veckan.",
+            }),
+            { status: 400 }
+          );
+        }
+      }
+
+      await collection.updateOne({ name }, { $set: { weeks: user.weeks } });
+
+      return new Response(
+        JSON.stringify({ message: "Vecka och/eller pass tillagda." }),
+        { status: 200 }
+      );
+    } else {
+      return new Response(
+        JSON.stringify({
+          message: "Ogiltig åtgärd. Använd 'add' eller 'remove'.",
+        }),
+        { status: 400 }
+      );
+    }
+  } catch (error) {
+    console.error("Fel:", error);
+    return new Response(
+      JSON.stringify({
+        error: "Något gick fel med databasen.",
+      }),
+      { status: 500 }
+    );
+  }
+};
+

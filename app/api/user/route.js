@@ -1,5 +1,6 @@
+import clientPromise from "../../../lib/mongodb";
+
 import { cookies } from "next/headers";
-import fs from "fs/promises";
 
 export const GET = async () => {
   try {
@@ -27,15 +28,20 @@ export const POST = async (req) => {
   const { email, password } = await req.json();
 
   try {
-    // Läs JSON-filen
-    const filePath = process.cwd() + "/data/data.json";
-    const jsonData = await fs.readFile(filePath, "utf-8");
+    const client = await clientPromise;
+    const db = client.db("db");
+    const collection = await db.collection("users");
 
-    const data = JSON.parse(jsonData);
-    console.log(data);
+    const userObject = await collection.findOne({ email });
 
-    const emailExists = data.some((item) => item.email === email);
-      const userObject = data.find((item) => item.email === email);
+    if (!userObject) {
+      return new Response(
+        JSON.stringify({
+          message: "Du verkar inte finnas med i vårt system. Kontakta admin.",
+        }),
+        { status: 404 }
+      );
+    }
 
     const adminPassword = process.env.ADMIN_PASSWORD;
     const userPassword = process.env.USER_PASSWORD;
@@ -43,10 +49,12 @@ export const POST = async (req) => {
     const isAdminPassword = adminPassword === password;
     const isUserPassword = userPassword === password;
 
-    const validUser = userObject.admin && isAdminPassword || !userObject.admin && isUserPassword;
-console.log("validUser", validUser);
+    const validUser =
+      (userObject.admin && isAdminPassword) ||
+      (!userObject.admin && isUserPassword);
+    console.log("validUser", validUser);
 
-    if (emailExists && validUser) {
+    if (userObject.email && validUser) {
       const cookieStore = await cookies();
       userObject &&
         cookieStore.set(
@@ -62,14 +70,14 @@ console.log("validUser", validUser);
         JSON.stringify({ userName: userObject.name, admin: userObject.admin }),
         { status: 200 }
       );
-    } else if (!emailExists) {
+    } else if (!userObject.email) {
       return new Response(
         JSON.stringify({
           message: "Du verkar inte finnas med i vårat system. Kontakta admin.",
         }),
         { status: 404 }
       );
-    } else if (emailExists && !isPassword) {
+    } else if (userObject.email && !isAdminPassword && !isUserPassword) {
       return new Response(
         JSON.stringify({
           message: "Fel lösenord, försök igen.",
@@ -92,39 +100,40 @@ console.log("validUser", validUser);
   }
 };
 
-
 export const PUT = async (req) => {
-  const { week } = await req.json(); // Ex: { "week": 1 eller 15 }
+  const { week } = await req.json(); // t.ex. { "week": 15 }
+
+  if (!week || typeof week !== "number") {
+    return new Response(JSON.stringify({ error: "Ogiltig veckodata." }), { status: 400 });
+  }
+
+  const weekToRemove = week > 1 ? week - 1 : 52;
+console.log("weekToRemove", weekToRemove); // Debugging
 
   try {
-    const filePath = process.cwd() + "/data/data.json";
-    const jsonData = await fs.readFile(filePath, "utf-8");
-    const data = JSON.parse(jsonData);
+    const client = await clientPromise;
+    const db = client.db("db"); // <-- Din databas heter "db"
+    const collection = db.collection("users");
 
-    // Räkna ut föregående vecka
-    const weekToRemove = week > 1 ? week - 1 : 52;
-
-    // Gå igenom alla användare och ta bort just den veckan
-    data.forEach((user) => {
-      user.weeks = user.weeks.filter((item) => item.week !== weekToRemove);
-    });
-
-    // Spara ändrade data tillbaka till filen
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+    // Uppdatera alla användare och ta bort rätt vecka ur weeks-arrayen
+    const result = await collection.updateMany(
+      {},
+      { $pull: { weeks: { week: weekToRemove } } }
+    );
 
     return new Response(
-      JSON.stringify({ message: `Vecka ${weekToRemove} borttagen för alla användare.` }),
+      JSON.stringify({
+        message: `Vecka ${weekToRemove} borttagen för ${result.modifiedCount} användare.`,
+      }),
       { status: 200 }
     );
   } catch (error) {
-    console.error("Fel vid rensning:", error);
-    return new Response(
-      JSON.stringify({ error: "Fel vid läsning eller skrivning av filen." }),
-      { status: 500 }
-    );
+    console.error("Fel vid uppdatering:", error);
+    return new Response(JSON.stringify({ error: "Kunde inte uppdatera användarna." }), {
+      status: 500,
+    });
   }
 };
-
 
 export const DELETE = async () => {
   try {

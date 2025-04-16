@@ -131,7 +131,7 @@ export const handleSchema = async (setMessage, week, pass, action, user) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: user,
+        name: user,
         week: week,
         pass: pass,
         action: action,

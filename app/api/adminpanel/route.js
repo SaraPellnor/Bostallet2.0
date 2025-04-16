@@ -1,41 +1,42 @@
-import fs from "fs/promises";
+import clientPromise from "../../../lib/mongodb";
 
-export const GET = async (req) => {
+export const GET = async () => {
   try {
-    // Läs JSON-filen
-    const filePath = process.cwd() + "/data/data.json";
-    const jsonData = await fs.readFile(filePath, "utf-8");
+    const client = await clientPromise;
+    const db = client.db("db"); // Här används "db" om du inte skickar in ett namn
+    const collection = db.collection("users");
 
-    const data = JSON.parse(jsonData);
+    // Hämta alla användare
+    const users = await collection.find({}).toArray();
 
-    if (data) {
-      return new Response(JSON.stringify(data), { status: 200 });
+    if (users.length > 0) {
+      return new Response(JSON.stringify(users), { status: 200 });
     } else {
-      return new Response(JSON.stringify({ message: "Data hittades inte!" }), {
+      return new Response(JSON.stringify({ message: "Inga användare hittades!" }), {
         status: 404,
       });
     }
   } catch (error) {
+    console.error("Fel vid hämtning från MongoDB:", error);
     return new Response(
-      JSON.stringify({ error: "Fel vid läsning av filen." }),
+      JSON.stringify({ error: "Fel vid hämtning från databasen." }),
       { status: 500 }
     );
   }
 };
 
+
+
 export const POST = async (req) => {
   try {
     const { name, email, mobile, isAdmin } = await req.json();
 
-    // Filväg till JSON-filen
-    const filePath = process.cwd() + "/data/data.json";
+    const client = await clientPromise;
+    const db = client.db("db"); // använder "db" från din connection string
+    const collection = db.collection("users");
 
-    // Läs in existerande data
-    const jsonData = await fs.readFile(filePath, "utf-8");
-    let data = JSON.parse(jsonData);
-
-    // Kontrollera om användaren redan finns
-    const userExists = data.some((item) => item.email === email);
+    // Kolla om användaren redan finns
+    const userExists = await collection.findOne({ email });
 
     if (userExists) {
       return new Response(
@@ -44,18 +45,17 @@ export const POST = async (req) => {
       );
     }
 
-    // Lägg till den nya användaren
+    // Skapa ny användare
     const newUser = {
       admin: isAdmin,
-      name: name,
-      email: email,
-      mobile: mobile,
+      name,
+      email,
+      mobile,
       weeks: [],
     };
-    data.push(newUser);
 
-    // Skriv tillbaka till filen
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+    // Spara till databasen
+    await collection.insertOne(newUser);
 
     return new Response(
       JSON.stringify({ message: "Användare tillagd!", userData: newUser }),
@@ -64,6 +64,7 @@ export const POST = async (req) => {
       }
     );
   } catch (error) {
+    console.error("Fel vid skapande av användare:", error);
     return new Response(
       JSON.stringify({
         message: "Fel vid hantering av data",
@@ -75,71 +76,83 @@ export const POST = async (req) => {
     );
   }
 };
+
 // jag behöver skicka med värdet för user...       <--------------------------------------
+
 export const PUT = async (req) => {
   const { week, pass, user, name, mobile, email, isAdminCheckBox } =
     await req.json();
 
   try {
-    // Läs JSON-filen
-    const filePath = process.cwd() + "/data/data.json";
-    const jsonData = await fs.readFile(filePath, "utf-8");
-    const data = JSON.parse(jsonData);
+    const client = await clientPromise;
+    const db = client.db("db");
+    const collection = db.collection("users");
 
-    // Hitta index för användaren i databasen
-    const userIndex = data.findIndex((item) => item.email === user.email);
+    // Hitta användaren
+    const existingUser = await collection.findOne({ email: user.email });
 
-    if (userIndex === -1) {
+    if (!existingUser) {
       return new Response(
         JSON.stringify({ message: "Användare hittades inte." }),
         { status: 404 }
       );
     }
 
-    // Uppdatera användarens data
-    data[userIndex] = {
-      ...data[userIndex], // Behåller befintliga värden
-      name: name,
-      mobile: mobile,
-      email: email,
+    // Förbered uppdateringsobjekt
+    const updatedUser = {
+      name,
+      mobile,
+      email,
       admin: isAdminCheckBox,
     };
 
-    
-    // Hitta rätt vecka och ta bort passet om det finns
-    if (week) {
-      const weekIndex = data[userIndex].weeks.findIndex(
-        (item) => item.week === week
-      );
-
-      if (weekIndex === -1) {
-        return new Response(JSON.stringify({ message: "Veckan finns inte." }), {
-          status: 404,
-        });
-      }
-
-      // Filtrera bort passet från veckan
-      data[userIndex].weeks[weekIndex].pass = data[userIndex].weeks[
-        weekIndex
-      ].pass.filter((number) => number !== pass);
-
-      // Om veckan blir tom, ta bort den helt från weeks-arrayen
-      if (data[userIndex].weeks[weekIndex].pass.length === 0) {
-        data[userIndex].weeks.splice(weekIndex, 1);
-      }
-    }
-    // Fel sker när jag ska skriva om databasen. <<<<<<<<<<--------------------------------
-    // Spara den uppdaterade databasen
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
-
-    return new Response(
-      JSON.stringify({ message: "Pass borttaget framgångsrikt." }),
-      { status: 200 }
+    // Uppdatera namn, mobil, email, admin-status
+    await collection.updateOne(
+      { email: user.email },
+      { $set: updatedUser }
     );
 
-  } catch (error) {
+    // Om vecka och pass skickas in – uppdatera weeks-fältet
+    if (week && pass !== undefined) {
+      // Ta bort passet från rätt vecka
+      await collection.updateOne(
+        {
+          email: user.email,
+        },
+        {
+          $pull: {
+            [`weeks.$[weekElem].pass`]: pass,
+          },
+        },
+        {
+          arrayFilters: [{ "weekElem.week": week }],
+        }
+      );
+
+      // Kontrollera om veckan är tom, ta bort den helt
+      const updatedUserAfter = await collection.findOne({ email: email });
+      const targetWeek = updatedUserAfter.weeks.find((w) => w.week === week);
+
+      if (targetWeek && targetWeek.pass.length === 0) {
+        await collection.updateOne(
+          { email: email },
+          {
+            $pull: {
+              weeks: { week: week },
+            },
+          }
+        );
+      }
+    }
+
     return new Response(
-      JSON.stringify({ error: "Fel vid läsning eller uppdatering av filen." }),
+      JSON.stringify({ message: "Pass borttaget och uppgifter uppdaterade." }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Fel i PUT:", error);
+    return new Response(
+      JSON.stringify({ error: "Fel vid uppdatering av användare." }),
       { status: 500 }
     );
   }
@@ -148,18 +161,17 @@ export const PUT = async (req) => {
 
 export const DELETE = async (req) => {
   const { email } = await req.json();
-console.log(email);
 
   try {
-    // Läs JSON-filen
-    const filePath = process.cwd() + "/data/data.json";
-    const jsonData = await fs.readFile(filePath, "utf-8");
-    const data = JSON.parse(jsonData);
+    // Koppla till databasen
+    const client = await clientPromise;
+    const db = client.db("db");  // Använd din databasnamn här
+    const collection = db.collection("users");  // Använd din collection för användare
 
-    // Hitta index för användaren i databasen
-    const userIndex = data.findIndex((item) => item.email === email);
+    // Försök hitta användaren i databasen
+    const user = await collection.findOne({ email });
 
-    if (userIndex === -1) {
+    if (!user) {
       return new Response(
         JSON.stringify({ message: "Användare hittades inte." }),
         { status: 404 }
@@ -167,10 +179,7 @@ console.log(email);
     }
 
     // Ta bort användaren från databasen
-    data.splice(userIndex, 1);
-
-    // Spara den uppdaterade databasen
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+    await collection.deleteOne({ email });
 
     return new Response(
       JSON.stringify({ message: "Användare borttagen." }),
@@ -178,7 +187,7 @@ console.log(email);
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: "Fel vid läsning eller borttagning av filen." }),
+      JSON.stringify({ error: "Fel vid anslutning till databasen eller borttagning av användare." }),
       { status: 500 }
     );
   }

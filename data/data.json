@@ -6,13 +6,6 @@
     "mobile": "07304424444",
     "weeks": [
       {
-        "week": 15,
-        "pass": [
-          2,
-          1
-        ]
-      },
-      {
         "week": 1,
         "pass": [
           1,
@@ -49,13 +42,6 @@
     "mobile": 730442444,
     "weeks": [
       {
-        "week": 15,
-        "pass": [
-          1,
-          2
-        ]
-      },
-      {
         "week": 1,
         "pass": [
           1,
@@ -68,6 +54,12 @@
           1,
           2
         ]
+      },
+      {
+        "week": 16,
+        "pass": [
+          1
+        ]
       }
     ],
     "admin": false
@@ -78,13 +70,6 @@
     "email": "sara.ahlquist@hotmail.com",
     "mobile": 730442444,
     "weeks": [
-      {
-        "week": 15,
-        "pass": [
-          1,
-          2
-        ]
-      },
       {
         "week": 1,
         "pass": [
@@ -130,16 +115,16 @@
     "mobile": 730442444,
     "weeks": [
       {
-        "week": 15,
-        "pass": [
-          2
-        ]
-      },
-      {
         "week": 4,
         "pass": [
           1,
           2
+        ]
+      },
+      {
+        "week": 16,
+        "pass": [
+          1
         ]
       }
     ],
@@ -186,13 +171,6 @@
     "email": "sara.ahlquist@hotmail.com",
     "mobile": "0730442444",
     "weeks": [
-      {
-        "week": 15,
-        "pass": [
-          1,
-          2
-        ]
-      },
       {
         "week": 1,
         "pass": [
