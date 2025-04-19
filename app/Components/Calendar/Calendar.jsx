@@ -1,4 +1,5 @@
 "use client";
+import { setDay } from "date-fns";
 import { IoIosPersonAdd } from "react-icons/io";
 import { TiDelete } from "react-icons/ti";
 import React, { useEffect } from "react";
@@ -6,7 +7,11 @@ import { getISOWeek, getWeekYear } from "date-fns";
 import Loading from "../Loading/Loading";
 import childrenHolidayWeeks from "../../utils/getHolidaysWeek";
 import { useUserContext } from "../../context/UserContext";
-import { handleSchema, fetchData, removeOldWeeks } from "../../functions/functions";
+import {
+  handleSchema,
+  fetchData,
+  removeOldWeeks,
+} from "../../functions/functions";
 import Header from "../Header/Header";
 const Calendar = () => {
   const {
@@ -19,6 +24,9 @@ const Calendar = () => {
     setMessage,
     currentWeek,
     setCurrentWeek,
+    currentDay,
+    fridaysArray,
+    setCurrentDay,
     currentYear,
     setCurrentYear,
     hollidays,
@@ -27,10 +35,15 @@ const Calendar = () => {
 
   // Hämta schemat från API
   useEffect(() => {
-    removeOldWeeks(getISOWeek(new Date()))
+    removeOldWeeks(getISOWeek(new Date()));
     setHollidays(childrenHolidayWeeks);
-    setCurrentWeek(getISOWeek(new Date()));
+    setCurrentWeek(
+      currentDay > 5 || currentDay == 0
+        ? getISOWeek(new Date()) + 1
+        : getISOWeek(new Date())
+    );
     setCurrentYear(getWeekYear(new Date()));
+    setCurrentDay(setDay(new Date()));
     fetchData(setLoading, setUserData);
   }, [message]);
 
@@ -51,7 +64,7 @@ const Calendar = () => {
         });
     });
     return (
-      <div className={`${passCount>3 && "opacity-50"} pb-5 px-5 py-3`}>
+      <div className={`${passCount > 3 && "opacity-50"} pb-5 px-5 py-3`}>
         <div className="bg-purple_2 w-full px-2 flex justify-between">
           {passNumber == 1 ? (
             <>
@@ -142,10 +155,7 @@ const Calendar = () => {
             </p>
           )}
 
-          <div
-            className="text-white text-xl bg-black"
-            key={weekNumber}
-          >
+          <div className="text-white text-xl bg-black" key={weekNumber}>
             <div className="text-2xl font-bold">
               {hollidays.some(
                 (item) =>
@@ -159,12 +169,16 @@ const Calendar = () => {
                   )
                   .map((item, index) => (
                     <div className="p-3" key={index}>
-                      <p> Fredag V. {weekNumber}</p>
-                      <p className="text-green-400 font-thin">{item.holiday}</p>
+                     <div className="flex gap-2 items-end"> <p> Fredag V. {weekNumber}</p>
+                      <p className="text-lg text-blue-200">{fridaysArray[i]}</p></div>
+                      <p className="text-blue-400 font-thin">{item.holiday}</p>
                     </div>
                   ))
               ) : (
-                <p className="p-3">Fredag V. {weekNumber}</p>
+                <div className="p-3 flex gap-2 items-end">
+                  <p >Fredag V. {weekNumber}</p>
+                  <p className="text-lg text-green-200">{fridaysArray[i]}</p>
+                </div>
               )}
             </div>
 
@@ -181,9 +195,9 @@ const Calendar = () => {
   ) : (
     <div className="w-full max-w-[800px] h-full mx-5 flex flex-col">
       <Header />
-     {currentWeek != 52 && <p className="gradiantBg p-4 text-white text-2xl">
-        {currentYear}
-      </p>}
+      {currentWeek != 52 && (
+        <p className="gradiantBg p-4 text-white text-2xl">{currentYear}</p>
+      )}
       {generateRows()}
     </div>
   );

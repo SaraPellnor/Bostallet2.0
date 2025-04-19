@@ -2,6 +2,12 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useUserContext } from "../../context/UserContext";
 import { logOutUser } from "../../functions/functions";
+import { AiOutlineLogout } from "react-icons/ai";
+import { GrUserAdmin } from "react-icons/gr";
+import { FaRegCalendarAlt } from "react-icons/fa";
+
+
+
 
 const Header = () => {
   const { admin, setUser } = useUserContext();
@@ -9,28 +15,27 @@ const Header = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex gap-5 justify-end w-full max-w-[800px] p-5 pr-16 fixed z-10">
+    <div className=" text-2xl fixed top-6 right-0 flex gap-5 justify-end flex-col z-10">
       {admin && pathname === "/kalender" ? (
         <button
           onClick={() => router.push("/adminpanel")}
-          className="text-white font-bold px-3 py-1 rounded-md bg-green-500 hover:bg-green-600"
+          className="text-white font-bold p-4 shadow-md shadow-black pl-6 rounded-s-full bg-green-500 hover:bg-green-600"
         >
-          Adminpanel
+          <GrUserAdmin />
         </button>
       ) : pathname === "/adminpanel" ? (
         <button
           onClick={() => router.push("/kalender")}
-          className="text-white font-bold px-3 py-1 rounded-md bg-green-500 border-2 border-white hover:bg-green-600"
+          className="text-white font-bold p-4 pl-6 shadow-md shadow-black rounded-s-full bg-green-500 hover:bg-green-600"
         >
-          Kalender
+          <FaRegCalendarAlt />
         </button>
       ): ("")}
       <button
         onClick={() => logOutUser(setUser)}
-        className="text-white font-bold px-3 py-1 rounded-md bg-red-500 hover:bg-red-600"
+        className="text-white font-bold p-4 shadow-md shadow-black rounded-s-full bg-red-500 hover:bg-red-600"
       >
-        Logga ut
-      </button>
+<AiOutlineLogout />      </button>
     </div>
   );
 };

@@ -11,7 +11,7 @@ const page = async () => {
 
   return (
     <div className="relative w-full">
-      <Image priority alt="hero image" src={hero} />
+      <Image className="max-w-[700px] w-full m-auto" alt="hero image" src={hero} />
 
       <Login />
     </div>

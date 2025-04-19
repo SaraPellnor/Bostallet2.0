@@ -105,3 +105,34 @@ export const POST = async (req) => {
     );
   }
 };
+
+export const DELETE = async () => {
+  try {
+    const cookieStore = cookies();
+    const isUser = cookieStore.get("user");
+
+    if (isUser) {
+      // Instruera webbläsaren att ta bort cookien
+      const response = new Response(
+        JSON.stringify({ message: "Cookie borttagen!" }),
+        { status: 200 }
+      );
+
+      response.headers.set(
+        "Set-Cookie",
+        `user=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`
+      );
+
+      return response;
+    } else {
+      return new Response(JSON.stringify({ message: "Cookie hittades inte!" }), {
+        status: 404,
+      });
+    }
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: "Fel vid borttagning av cookie." }),
+      { status: 500 }
+    );
+  }
+};

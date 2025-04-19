@@ -1,4 +1,7 @@
-import { getISOWeek } from "date-fns";
+import {
+  getISOWeek
+} from "date-fns";
+
 const childrenHolidayWeeks = () => {
   function calculateEaster(year) {
     const f = Math.floor,
