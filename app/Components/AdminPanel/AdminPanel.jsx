@@ -108,7 +108,7 @@ const AdminPanel = () => {
     <Loading />
   ) : (
     <>  <Header />
-    <div className="flex flex-col justify-center gap-5 text-xl mt-1">
+    <div className=" flex flex-col justify-center gap-5 text-xl mt-1">
       <div className=" text-center pt-2 font-bold text-2xl">
         Lägg till ny medarbetare
       </div>
@@ -222,8 +222,8 @@ const AdminPanel = () => {
                 />
               </div>
             </div>
-            <div className="flex justify-between px-3 py-2">
-              <p className="font-bold">E-post:</p> <p>{item.email}</p>
+            <div className="flex flex-wrap justify-between px-3 py-2">
+              <p className="font-bold">E-post:</p> <p className="overflow-y-auto max-w-[241px]">{item.email}</p>
             </div>
             <div className="flex justify-between px-3 py-2">
               <p className="font-bold">Admin:</p>{" "}
