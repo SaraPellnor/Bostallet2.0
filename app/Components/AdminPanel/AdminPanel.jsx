@@ -99,6 +99,7 @@ const AdminPanel = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchUser();
     fetchData();
   }, []);
@@ -107,7 +108,7 @@ const AdminPanel = () => {
     <Loading />
   ) : (
     <>  <Header />
-    <div className="flex flex-col justify-center gap-3 text-xl mt-16">
+    <div className="flex flex-col justify-center gap-5 text-xl mt-1">
       <div className=" text-center pt-2 font-bold text-2xl">
         Lägg till ny medarbetare
       </div>
@@ -116,7 +117,7 @@ const AdminPanel = () => {
 
       {users.map((item, i) =>
         edit == item.name ? (
-          <div key={i} className="flex flex-col bg-white">
+          <div key={i} className="flex flex-col bg-white shadow-md">
             <div className=" font-bold flex justify-between bg-purple_1 text-white p-3">
               <input
                 className="w-[60%] bg-purple_1"
@@ -204,7 +205,7 @@ const AdminPanel = () => {
             </div>
           </div>
         ) : (
-          <div key={i} className="flex flex-col bg-white">
+          <div key={i} className="flex flex-col bg-white shadow-md">
             <div className=" font-bold flex justify-between bg-purple_1 text-white p-3">
               <p className="">{item.name}</p>
               <div className="flex gap-4 items-center">

@@ -1,7 +1,7 @@
 "use client"; // Behövs eftersom Context hanterar state
 import { createContext, useContext, useState, useEffect, use } from "react";
 import { checkUserStatus } from "../functions/functions";
-import { addWeeks, format, nextFriday } from "date-fns";
+import { addWeeks, format, getDay, getISOWeek, getWeekYear, nextFriday } from "date-fns";
 const UserContext = createContext();
 
 // Provider-komponenten som omger appen
@@ -13,9 +13,13 @@ export const UserProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentWeek, setCurrentWeek] = useState(0);
-  const [currentYear, setCurrentYear] = useState(0);
-  const [currentDay, setCurrentDay] = useState(0);
+  const [currentWeek, setCurrentWeek] = useState(
+    getDay(new Date()) > 5 || getDay(new Date()) == 0
+      ? getISOWeek(new Date()) + 1
+      : getISOWeek(new Date())
+  );
+  const [currentYear, setCurrentYear] = useState(getWeekYear(new Date()));
+  const [currentDay, setCurrentDay] = useState(getDay(new Date()));
   const [hollidays, setHollidays] = useState([]);
   const [admin, setAdmin] = useState(false);
   const [fridaysArray, setFridaysArray] = useState([]); // Ny state för fredagar

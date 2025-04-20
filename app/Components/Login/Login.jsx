@@ -15,7 +15,7 @@ const Login = () => {
 
   return (
     <div className="p-5 max-w-[700px] m-auto">
-      <div className="flex flex-col justify-around gap-4 pt-20">
+      <form className="flex flex-col justify-around gap-4 pt-20">
         <input
           className="px-10 py-4"
           placeholder="e-post"
@@ -35,6 +35,7 @@ const Login = () => {
           required
         />
         <button
+        type="submit"
           className="transition duration-500 ease-out text-font font-bold gradiantBg py-4 px-10 rounded-md hover:scale-105"
           onClick={() =>
             handleLogIn(email, password, setMessage, setUser, setAdmin)
@@ -42,8 +43,8 @@ const Login = () => {
         >
           Verifiera dig
         </button>
-        {message && <p className="mt-4 text-center">{message}</p>}
-      </div>
+        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+      </form>
     </div>
   );
 };

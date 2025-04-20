@@ -30,6 +30,7 @@ export const GET = async () => {
 export const POST = async (req) => {
   try {
     const { name, email, mobile, isAdmin } = await req.json();
+console.log(isAdmin);
 
     const client = await clientPromise;
     const db = client.db("db"); // använder "db" från din connection string
@@ -48,9 +49,9 @@ export const POST = async (req) => {
     // Skapa ny användare
     const newUser = {
       admin: isAdmin,
-      name,
-      email,
-      mobile,
+      name:name,
+      email:email,
+      mobile:mobile,
       weeks: [],
     };
 

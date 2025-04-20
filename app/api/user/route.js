@@ -6,7 +6,7 @@ export const GET = async () => {
   try {
     // Läs JSON-filen
     const cookieStore = await cookies();
-    const isUser = cookieStore.get("user");
+    const isUser = await cookieStore.get("user");
     const decodedUser = decodeURIComponent(isUser.value);
 
     if (decodedUser) {
@@ -57,7 +57,6 @@ export const POST = async (req) => {
         userName: userObject.name,
         admin: userObject.admin,
       });
-
       response.cookies.set(
         "user",
         JSON.stringify({

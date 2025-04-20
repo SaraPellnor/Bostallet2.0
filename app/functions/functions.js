@@ -27,6 +27,7 @@ export const handleLogIn = async (
     });
 
     const data = await res.json();
+    console.log(data);
 
     if (res.ok) {
       setMessage(data.message); // Visa framgångsmeddelande
@@ -84,10 +85,12 @@ export const handleUser = async (week, pass, action) => {
 };
 
 export async function createUser(formData) {
-  const isAdmin = formData.get("isAdmin");
+
+  const isAdmin = formData.get("isAdmin") === "true";
   const name = formData.get("name");
   const email = formData.get("email");
   const mobile = formData.get("mobile");
+  
 
   const res = await fetch(`/api/adminpanel`, {
     method: "POST",
@@ -101,7 +104,11 @@ export async function createUser(formData) {
       isAdmin: isAdmin,
     }),
   });
-
+if(res.status === 201) {
+    alert("Användare skapad!");
+    window.location.reload(); // Laddar om sidan
+    return;
+  }
   if(res.status === 400) {
 alert("Användaren finns redan! Du måste välja en annan epost-adress.");
 return

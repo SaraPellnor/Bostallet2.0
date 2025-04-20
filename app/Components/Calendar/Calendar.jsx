@@ -1,9 +1,8 @@
 "use client";
-import { setDay } from "date-fns";
 import { IoIosPersonAdd } from "react-icons/io";
 import { TiDelete } from "react-icons/ti";
 import React, { useEffect } from "react";
-import { getISOWeek, getWeekYear } from "date-fns";
+import { getISOWeek } from "date-fns";
 import Loading from "../Loading/Loading";
 import childrenHolidayWeeks from "../../utils/getHolidaysWeek";
 import { useUserContext } from "../../context/UserContext";
@@ -23,27 +22,16 @@ const Calendar = () => {
     message,
     setMessage,
     currentWeek,
-    setCurrentWeek,
-    currentDay,
     fridaysArray,
-    setCurrentDay,
     currentYear,
-    setCurrentYear,
     hollidays,
+    currentDay,
     setHollidays,
   } = useUserContext();
-
   // Hämta schemat från API
   useEffect(() => {
     removeOldWeeks(getISOWeek(new Date()));
     setHollidays(childrenHolidayWeeks);
-    setCurrentWeek(
-      currentDay > 5 || currentDay == 0
-        ? getISOWeek(new Date()) + 1
-        : getISOWeek(new Date())
-    );
-    setCurrentYear(getWeekYear(new Date()));
-    setCurrentDay(setDay(new Date()));
     fetchData(setLoading, setUserData);
   }, [message]);
 
@@ -64,7 +52,14 @@ const Calendar = () => {
         });
     });
     return (
-      <div className={`${passCount > 3 && "opacity-50"} pb-5 px-5 py-3`}>
+      <div
+        className={`pb-5 px-5 py-3 ${
+          (passNumber === 1 && passCount > 3) ||
+          (passNumber === 2 && passCount > 1)
+            ? "opacity-50"
+            : ""
+        } pb-5 px-5 py-3`}
+      >
         <div className="bg-purple_2 w-full px-2 flex justify-between">
           {passNumber == 1 ? (
             <>
@@ -78,28 +73,30 @@ const Calendar = () => {
             </>
           )}
         </div>
-        {!userIn && passCount < 4 && (
-          <div
-            onClick={() =>
-              handleSchema(
-                setMessage,
-                weekNumber,
-                passNumber,
-                userIn ? "remove" : "add",
-                user
-              )
-            }
-            className="cursor-pointer flex items-center h-12 p-1 border-b-2 border-yellow_1"
-          >
-            <p className="text-green-400 sm:text-[20px] text-[15px]">
-              Lägg till mig
-            </p>
-            <IoIosPersonAdd
-              title="Klicka här för att lägga till dig på passet"
-              className="text-green-400 text-3xl"
-            />
-          </div>
-        )}
+        {!userIn &&
+          ((passNumber == 1 && passCount < 4) ||
+            (passNumber == 2 && passCount < 2)) && (
+            <button
+              onClick={() =>
+                handleSchema(
+                  setMessage,
+                  weekNumber,
+                  passNumber,
+                  userIn ? "remove" : "add",
+                  user
+                )
+              }
+              className=" w-full flex items-center h-12 p-1 border-b-2 border-yellow_1"
+            >
+              <p className="text-green-400 sm:text-[20px] text-[15px]">
+                Lägg till mig
+              </p>
+              <IoIosPersonAdd
+                title="Klicka här för att lägga till dig på passet"
+                className="text-green-400 text-3xl"
+              />
+            </button>
+          )}
         {participants.map((name, index) => (
           <div
             className={`px-2 flex items-center p-1 border-b-2 border-yellow_1 ${
@@ -132,7 +129,8 @@ const Calendar = () => {
             )}
           </div>
         ))}
-        {passCount > 3 && (
+        {((passNumber === 1 && passCount > 3) ||
+          (passNumber === 2 && passCount > 1)) && (
           <div className="flex justify-end items-center h-12 w-full">
             <p className="self-center m-auto text-yellow-400 font-bold">
               FULLT
@@ -169,14 +167,19 @@ const Calendar = () => {
                   )
                   .map((item, index) => (
                     <div className="p-3" key={index}>
-                     <div className="flex gap-2 items-end"> <p> Fredag V. {weekNumber}</p>
-                      <p className="text-lg text-blue-200">{fridaysArray[i]}</p></div>
+                      <div className="flex gap-2 items-end">
+                        {" "}
+                        <p> Fredag V. {weekNumber}</p>
+                        <p className="text-lg text-blue-200">
+                          {fridaysArray[i]}
+                        </p>
+                      </div>
                       <p className="text-blue-400 font-thin">{item.holiday}</p>
                     </div>
                   ))
               ) : (
                 <div className="p-3 flex gap-2 items-end">
-                  <p >Fredag V. {weekNumber}</p>
+                  <p>Fredag V. {weekNumber}</p>
                   <p className="text-lg text-green-200">{fridaysArray[i]}</p>
                 </div>
               )}
@@ -193,7 +196,7 @@ const Calendar = () => {
   return loading ? (
     <Loading />
   ) : (
-    <div className="w-full max-w-[800px] h-full mx-5 flex flex-col">
+    <div className="w-full max-w-[800px] h-full flex flex-col">
       <Header />
       {currentWeek != 52 && (
         <p className="gradiantBg p-4 text-white text-2xl">{currentYear}</p>
