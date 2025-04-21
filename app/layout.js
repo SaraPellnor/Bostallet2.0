@@ -1,5 +1,6 @@
 import "./globals.css";
 import { UserProvider } from "./context/UserContext";
+import Script from "next/script";
 
 export const metadata = {
   title: "Bostället 2.0",
@@ -10,7 +11,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="flex justify-center">
-          <UserProvider>{children}</UserProvider>
+        <UserProvider>{children}</UserProvider>
+        <Script
+          id="usercentrics-cmp"
+          src="https://web.cmp.usercentrics.eu/ui/loader.js"
+          data-settings-id="G_1Y_eDbu5WybI"
+          async
+        />
       </body>
     </html>
   );
