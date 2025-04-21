@@ -13,12 +13,12 @@ export default function RootLayout({ children }) {
       <body className="flex justify-center">
         <UserProvider>{children}</UserProvider>
         {/* Scriptet för att aktivera cookiebanner  */}
-        <Script
+        {/* <Script
           id="usercentrics-cmp"
           src="https://web.cmp.usercentrics.eu/ui/loader.js"
           data-settings-id="G_1Y_eDbu5WybI"
           async
-        />
+        /> */}
       </body>
     </html>
   );

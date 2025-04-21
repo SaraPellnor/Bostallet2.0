@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 export const GET = async () => {
   try {
     // Läs JSON-filen
-    const cookieStore =  cookies();
+    const cookieStore =  await cookies();
     const isUser =  cookieStore.get("user");
     const decodedUser = decodeURIComponent(isUser.value);
 
@@ -107,7 +107,7 @@ export const POST = async (req) => {
 
 export const DELETE = async () => {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const isUser = cookieStore.get("user");
 
     if (isUser) {
