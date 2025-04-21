@@ -11,7 +11,7 @@ const page = async () => {
   user && redirect("/kalender"); // Skicka tillbaka till startsidan om det inte finns en token
 
   return (
-    <div className="max-w-[700px] bg-background w-full flex flex-col h-[100vh] justify-between">
+    <div className=" max-w-[700px] bg-background w-full flex flex-col h-[100vh] justify-between">
       <Image className=" w-full m-auto" alt="hero image" src={hero} />
 
       <Login />

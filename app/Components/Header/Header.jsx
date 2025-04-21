@@ -13,7 +13,6 @@ const Header = () => {
   const { admin, setUser, user } = useUserContext();
   const router = useRouter();
   const pathname = usePathname();
-console.log(admin, user);
 
   return (
     <div className=" text-2xl fixed top-6 right-0 flex gap-5 justify-end flex-col z-10">

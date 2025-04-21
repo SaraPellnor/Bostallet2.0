@@ -14,8 +14,8 @@ const Login = () => {
   } = useUserContext();
 
   return (
-    <div className="p-5 w-full m-auto">
-      <form className="flex flex-col justify-around gap-4 pt-20">
+    <div className="pb-32 p-5 w-full m-auto">
+      <form className="flex flex-col justify-around gap-4">
         <input
           className="px-10 py-4"
           placeholder="e-post"
