@@ -17,6 +17,7 @@ import {
 } from "../../functions/functions";
 import { redirect } from "next/navigation";
 import Header from "../Header/Header";
+import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 const AdminPanel = () => {
   const { setAdmin, loading, setLoading } = useUserContext();
   const [users, setUsers] = useState([]);
@@ -255,6 +256,7 @@ const AdminPanel = () => {
           </div>
         )
       )}
+      <ScrollToTopButton />
     </div>
     </>
   );

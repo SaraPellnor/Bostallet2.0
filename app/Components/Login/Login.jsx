@@ -14,7 +14,7 @@ const Login = () => {
   } = useUserContext();
 
   return (
-    <div className="p-5 max-w-[700px] m-auto">
+    <div className="p-5 w-full m-auto">
       <form className="flex flex-col justify-around gap-4 pt-20">
         <input
           className="px-10 py-4"

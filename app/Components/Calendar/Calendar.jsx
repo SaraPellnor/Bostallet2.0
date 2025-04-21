@@ -1,4 +1,5 @@
 "use client";
+
 import { IoIosPersonAdd } from "react-icons/io";
 import { TiDelete } from "react-icons/ti";
 import React, { useEffect } from "react";
@@ -12,6 +13,7 @@ import {
   removeOldWeeks,
 } from "../../functions/functions";
 import Header from "../Header/Header";
+import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 const Calendar = () => {
   const {
     user,
@@ -202,6 +204,7 @@ const Calendar = () => {
         <p className="gradiantBg p-4 text-white text-2xl">{currentYear}</p>
       )}
       {generateRows()}
+<ScrollToTopButton /> 
     </div>
   );
 };
