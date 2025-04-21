@@ -1,10 +1,16 @@
 import "./globals.css";
 import { UserProvider } from "./context/UserContext";
-import Script from "next/script";
+// import Script from "next/script";
 
 export const metadata = {
   title: "Bostället 2.0",
   description: "Nya generationens häng",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  
+  },
 };
 
 export default function RootLayout({ children }) {
