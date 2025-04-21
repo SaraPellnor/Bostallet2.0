@@ -37,8 +37,7 @@ const Footer = () => {
       </div> */}
 
       <div title="Cookies" className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-sm shadow-purple_1 hover:scale-110 transition-all duration-300 ease-in-out bg-white">
-        <a href="#" onClick={UC_UI.showSecondLayer()}>
-          {" "}
+        <a href="#" onClick="UC_UI.showSecondLayer();">
           <MdOutlineCookie />
         </a>
       </div>
