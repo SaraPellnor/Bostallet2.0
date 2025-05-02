@@ -1,7 +1,7 @@
 "use client"; // Behövs eftersom Context hanterar state
-import { createContext, useContext, useState, useEffect, use } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { checkUserStatus } from "../functions/functions";
-import { addWeeks, format, getDay, getISOWeek, getWeekYear, nextFriday } from "date-fns";
+import { addWeeks, format, getDay, getISOWeek, getWeekYear, isFriday } from "date-fns";
 const UserContext = createContext();
 
 // Provider-komponenten som omger appen
@@ -24,16 +24,20 @@ export const UserProvider = ({ children }) => {
   const [admin, setAdmin] = useState(false);
   const [fridaysArray, setFridaysArray] = useState([]); // Ny state för fredagar
 
-  function getNext30Fridays() {
-    let currentFriday = nextFriday(new Date());
-    let fridaysArray = [];
-    for (let i = 0; i < 30; i++) {
-      fridaysArray.push(format(currentFriday, "d/M"));
-      currentFriday = addWeeks(currentFriday, 1);
-    }
 
+  function getNext30Fridays() {
+    const today = new Date();
+    const startDate = isFriday(today) ? today : nextFriday(today);
+    const fridaysArray = [];
+  
+    for (let i = 0; i < 30; i++) {
+      const currentFriday = addWeeks(startDate, i);
+      fridaysArray.push(format(currentFriday, 'd/M'));
+    }
+  
     return fridaysArray;
   }
+  
 
   useEffect(() => {
     async function checkUser() {
