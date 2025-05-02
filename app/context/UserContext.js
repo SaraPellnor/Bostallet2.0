@@ -1,7 +1,7 @@
 "use client"; // Behövs eftersom Context hanterar state
 import { createContext, useContext, useState, useEffect } from "react";
 import { checkUserStatus } from "../functions/functions";
-import { addWeeks, format, getDay, getISOWeek, getWeekYear, isFriday } from "date-fns";
+import { addWeeks, format, getDay, getISOWeek, getWeekYear, isFriday, nextFriday } from "date-fns";
 const UserContext = createContext();
 
 // Provider-komponenten som omger appen
