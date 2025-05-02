@@ -6,7 +6,7 @@ export const GET = async () => {
   try {
     // Läs JSON-filen
     const cookieStore =  await cookies();
-    const isUser =  cookieStore.get("user");
+    const isUser =   cookieStore.get("user");
     const decodedUser = decodeURIComponent(isUser.value);
 
     if (decodedUser) {
@@ -26,9 +26,10 @@ export const GET = async () => {
 
 
 export const POST = async (req) => {
-  const { email, password } = await req.json();
-
+  
+ 
   try {
+    const { email, password } = await req.json();
     const client = await clientPromise;
     const db = client.db("db");
     const collection = db.collection("users");
@@ -108,7 +109,7 @@ export const POST = async (req) => {
 export const DELETE = async () => {
   try {
     const cookieStore = await cookies();
-    const isUser = cookieStore.get("user");
+    const isUser =  cookieStore.get("user");
 
     if (isUser) {
       // Instruera webbläsaren att ta bort cookien

@@ -18,6 +18,7 @@ export const handleLogIn = async (
   setAdmin
 ) => {
   try {
+    
     const res = await fetch("/api/user/", {
       method: "POST",
       headers: {
@@ -27,7 +28,6 @@ export const handleLogIn = async (
     });
 
     const data = await res.json();
-    console.log(data);
 
     if (res.ok) {
       setMessage(data.message); // Visa framgångsmeddelande
