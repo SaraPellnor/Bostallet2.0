@@ -45,11 +45,11 @@ const Footer = () => {
         <FaBullhorn />
       </div> */}
 
-      {/* <div title="Cookies" className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-sm shadow-purple_1 hover:scale-110 transition-all duration-300 ease-in-out bg-white">
+      <div title="Cookies" className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-sm shadow-purple_1 hover:scale-110 transition-all duration-300 ease-in-out bg-white">
         <a href="#" onClick={handleClick}>
           <MdOutlineCookie />
         </a>
-      </div> */}
+      </div>
     </div>
   );
 };
