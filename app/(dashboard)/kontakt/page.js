@@ -5,7 +5,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 
 const page = () => {
   return (
-    <div className=" max-w-4xl min-w-[300px] w-2/3 mx-auto px-4 py-12">
+    <div className=" max-w-4xl min-w-[300px] w-2/3 mx-auto mb-12 px-4 py-12">
       <Header />
       <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
         Kontakta oss
@@ -95,31 +95,31 @@ const page = () => {
                     t.ex. förseningar eller frånvaro!
                   </h2>
                   <ul className="text-blue-200 space-y-1 text-xl font-bold">
-                    <li className="flex gap-2 items-center">
+                    <li className="flex gap-2 items-center hover:text-blue-300">
                       <FaPhoneAlt />
                       <a href="tel:0703864828">Zandra Mardell</a>
                     </li>
-                    <li className="flex gap-2 items-center">
+                    <li className="flex gap-2 items-center hover:text-blue-300">
                       <FaPhoneAlt />
                       <a href="tel:0761608485">Jennie Jungersten</a>
                     </li>
-                    <li className="flex gap-2 items-center">
+                    <li className="flex gap-2 items-center hover:text-blue-300">
                       <FaPhoneAlt />
                       <a href="tel:0730442444">Sara Pellnor</a>
                     </li>
-                    <li className="flex gap-2 items-center">
+                    <li className="flex gap-2 items-center hover:text-blue-300">
                       <FaPhoneAlt />
                       <a href="tel:0736631252">Carin Thapper</a>
                     </li>
-                    <li className="flex gap-2 items-center">
+                    <li className="flex gap-2 items-center hover:text-blue-300">
                       <FaPhoneAlt />
                       <a href="tel:0708613565">Daniel Lönnqvist</a>
                     </li>
-                    <li className="flex gap-2 items-center">
+                    <li className="flex gap-2 items-center hover:text-blue-300">
                       <FaPhoneAlt />
                       <a href="tel:0735043654">Sara Lyngsaa</a>
                     </li>
-                    <li className="flex gap-2 items-center">
+                    <li className="flex gap-2 items- hover:text-blue-300">
                       <FaPhoneAlt />
                       <a href="tel:0729919107">Marcus Schulz</a>
                     </li>

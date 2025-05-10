@@ -45,6 +45,7 @@ export const handleLogIn = async (
 };
 
 export const removeOldWeeks = async (week) => {
+  
   try {
     const res = await fetch("/api/user/", {
       method: "PUT",   

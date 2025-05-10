@@ -16,28 +16,33 @@ const Footer = () => {
   };
 
   const handleClick = () => {
-    if (window.UC_UI && typeof window.UC_UI.showSecondLayer === 'function') {
+    if (window.UC_UI && typeof window.UC_UI.showSecondLayer === "function") {
       window.UC_UI.showSecondLayer();
     } else {
-      console.warn('Cookiebot är inte tillgängligt ännu.');
+      console.warn("Cookiebot är inte tillgängligt ännu.");
     }
   };
 
   return (
-    <div className=" fixed bottom-0 left-0 w-full bg-yellow_1 flex py-6 text-3xl justify-around text-purple_1 ">
-      <div onClick={() => redirectTo("/kontakt")} title="Kontakt" className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-sm shadow-purple_1 hover:scale-110 transition-all duration-300 ease-in-out bg-white">
+    <div className=" fixed bottom-0 left-0 w-full flex py-6 text-3xl justify-around text-purple_1 ">
+      <div
+        onClick={() => redirectTo("/kontakt")}
+        title="Kontakt"
+        className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-md shadow-black hover:text-purple_2 hover:scale-110 transition-all duration-300 ease-in-out bg-white"
+      >
         <PiAddressBookTabsBold />
       </div>
-      <div title="Info"
-              onClick={() => redirectTo("/info")}
-
-      className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-sm shadow-purple_1 hover:scale-110 transition-all duration-300 ease-in-out bg-white">
+      <div
+        title="Info"
+        onClick={() => redirectTo("/info")}
+        className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-md shadow-black hover:text-purple_2 hover:scale-110 transition-all duration-300 ease-in-out bg-white"
+      >
         <FaCircleInfo />
       </div>
       <div
-      title="GDPR"
+        title="GDPR"
         onClick={() => redirectTo("/integritetspolicy")}
-        className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-sm shadow-purple_1 hover:scale-110 transition-all duration-300 ease-in-out bg-white"
+        className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-md shadow-black hover:text-purple_2 hover:scale-110 transition-all duration-300 ease-in-out bg-white"
       >
         <MdPolicy />
       </div>
@@ -45,7 +50,10 @@ const Footer = () => {
         <FaBullhorn />
       </div> */}
 
-      <div title="Cookies" className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-sm shadow-purple_1 hover:scale-110 transition-all duration-300 ease-in-out bg-white">
+      <div
+        title="Cookies"
+        className="cursor-pointer flex justify-center items-center rounded-full w-12 h-12 shadow-md shadow-black hover:text-purple_2 hover:scale-110 transition-all duration-300 ease-in-out bg-white"
+      >
         <a href="#" onClick={handleClick}>
           <MdOutlineCookie />
         </a>
