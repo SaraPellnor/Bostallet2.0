@@ -1,5 +1,4 @@
 import React from "react";
-import { FaPhoneAlt } from "react-icons/fa";
 import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
 
@@ -43,42 +42,6 @@ const page = () => {
               REGLER
             </a>
           </h2>
-        </section>
-
-        <section className="border-t pt-4">
-          <h2 className="text-xl font-semibold  mb-2">
-            Ring relevant person i styrgruppen vid akuta förseningar
-          </h2>
-          <ul className="text-blue-200 space-y-1 text-xl font-bold">
-            <li className="flex gap-2 items-center">
-              <FaPhoneAlt />
-              <a href="tel:0730442444">Sara Pellnor</a>
-            </li>
-            <li className="flex gap-2 items-center">
-              <FaPhoneAlt />
-              <a href="tel:0703864828">Zandra Mardell</a>
-            </li>
-            <li className="flex gap-2 items-center">
-              <FaPhoneAlt />
-              <a href="tel:0761608485">Jennie Jungersten</a>
-            </li>
-            <li className="flex gap-2 items-center">
-              <FaPhoneAlt />
-              <a href="tel:0736631252">Carin Thapper</a>
-            </li>
-            <li className="flex gap-2 items-center">
-              <FaPhoneAlt />
-              <a href="tel:0708613565">Daniel Lönnqvist</a>
-            </li>
-            <li className="flex gap-2 items-center">
-              <FaPhoneAlt />
-              <a href="tel:0735043654">Sara Lyngsaa</a>
-            </li>
-            <li className="flex gap-2 items-center">
-              <FaPhoneAlt />
-              <a href="tel:0729919107">Marcus Schulz</a>
-            </li>
-          </ul>
         </section>
       </div>
       <Footer />
