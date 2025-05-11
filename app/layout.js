@@ -3,7 +3,7 @@ import { UserProvider } from "./context/UserContext";
 import Script from "next/script";
 
 export const metadata = {
-  title: "Bostället 2.0",
+  title: "Bostället2.0",
   description: "Nya generationens häng",
   icons: {
     icon: "/favicon.ico",
