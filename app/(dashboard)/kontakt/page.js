@@ -8,7 +8,7 @@ const page = () => {
     <div className=" mx-auto mb-12 px-4 py-12">
       <Header />
 
-      <div className="gradiantBg text-white shadow-md rounded-lg p-6 space-y-6">
+      <div className="gradiantBg max-w-[700px] text-white shadow-md rounded-lg p-6 space-y-6">
         <h1 className="text-3xl font-bold text-center mb-8">
           Kontaktinformation
         </h1>

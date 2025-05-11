@@ -24,7 +24,7 @@ const Footer = () => {
   };
 
   return (
-    <div className=" max-w-[700px] fixed bottom-0 w-full flex py-6 text-3xl justify-around text-purple_1 ">
+    <div className=" left-1/2 -translate-x-1/2 max-w-[700px] fixed bottom-0 w-full flex py-6 text-3xl justify-around text-purple_1 ">
       <div
         onClick={() => redirectTo("/kontakt")}
         title="Kontakt"

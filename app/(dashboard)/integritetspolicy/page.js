@@ -6,7 +6,7 @@ const Integritetspolicy = () => {
   return (
     <div className=" py-12 px-4 sm:px-6 lg:px-8 text-white">
       <Header />
-      <div className="flex flex-col gap-6 max-w-3xl mx-auto gradiantBg p-8 rounded-lg mb-20">
+      <div className="flex flex-col gap-6 max-w-[700px] mx-auto gradiantBg p-8 rounded-lg mb-20">
         <h1 className="text-3xl font-semibold text-center mb-8">
           Integritetspolicy
         </h1>

@@ -4,9 +4,9 @@ import Header from "../../Components/Header/Header";
 
 const page = () => {
   return (
-    <div className="max-w-4xl mx-auto px-6 pb-28 pt-12">
+    <div className="max-w-4xl mx-auto px-4 pb-28 pt-12">
       <Header />{" "}
-      <div className="gradiantBg text-white rounded-lg p-6 space-y-6">
+      <div className="max-w-[700px] gradiantBg text-white rounded-lg p-6 space-y-6">
         <h1 className="text-3xl font-bold text-center mb-8">
           Information inför pass på Bostället2.0
         </h1>
