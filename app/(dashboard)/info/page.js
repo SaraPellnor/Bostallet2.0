@@ -6,10 +6,10 @@ const page = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 pb-28 pt-12">
       <Header />{" "}
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-        Information inför pass på Bostället2.0
-      </h1>
       <div className="gradiantBg text-white rounded-lg p-6 space-y-6">
+        <h1 className="text-3xl font-bold text-center mb-8">
+          Information inför pass på Bostället2.0
+        </h1>
         <section>
           <h2 className="text-2xl font-semibold  mb-2">Schema & Bokning</h2>
           <p className="">

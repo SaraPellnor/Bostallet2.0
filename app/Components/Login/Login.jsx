@@ -20,7 +20,7 @@ const Login = () => {
   };
 
   return (
-    <div className="pb-32 p-5 w-full m-auto">
+    <div className=" p-5 w-full mx-auto">
       <form
         className="flex flex-col justify-around gap-4"
         onSubmit={handleSubmit}
@@ -49,7 +49,7 @@ const Login = () => {
         >
           Verifiera dig
         </button>
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+        {message && <p className=" text-center text-red-500">{message}</p>}
       </form>
     </div>
   );

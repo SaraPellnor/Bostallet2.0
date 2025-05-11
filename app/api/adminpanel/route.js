@@ -12,9 +12,12 @@ export const GET = async () => {
     if (users.length > 0) {
       return new Response(JSON.stringify(users), { status: 200 });
     } else {
-      return new Response(JSON.stringify({ message: "Inga användare hittades!" }), {
-        status: 404,
-      });
+      return new Response(
+        JSON.stringify({ message: "Inga användare hittades!" }),
+        {
+          status: 404,
+        }
+      );
     }
   } catch (error) {
     console.error("Fel vid hämtning från MongoDB:", error);
@@ -25,12 +28,9 @@ export const GET = async () => {
   }
 };
 
-
-
 export const POST = async (req) => {
   try {
     const { name, email, mobile, isAdmin } = await req.json();
-console.log(isAdmin);
 
     const client = await clientPromise;
     const db = client.db("db"); // använder "db" från din connection string
@@ -49,9 +49,9 @@ console.log(isAdmin);
     // Skapa ny användare
     const newUser = {
       admin: isAdmin,
-      name:name,
-      email:email,
-      mobile:mobile,
+      name: name,
+      email: email,
+      mobile: mobile,
       weeks: [],
     };
 
@@ -108,10 +108,7 @@ export const PUT = async (req) => {
     };
 
     // Uppdatera namn, mobil, email, admin-status
-    await collection.updateOne(
-      { email: user.email },
-      { $set: updatedUser }
-    );
+    await collection.updateOne({ email: user.email }, { $set: updatedUser });
 
     // Om vecka och pass skickas in – uppdatera weeks-fältet
     if (week && pass !== undefined) {
@@ -159,15 +156,14 @@ export const PUT = async (req) => {
   }
 };
 
-
 export const DELETE = async (req) => {
   const { email } = await req.json();
 
   try {
     // Koppla till databasen
     const client = await clientPromise;
-    const db = client.db("db");  // Använd din databasnamn här
-    const collection = db.collection("users");  // Använd din collection för användare
+    const db = client.db("db"); // Använd din databasnamn här
+    const collection = db.collection("users"); // Använd din collection för användare
 
     // Försök hitta användaren i databasen
     const user = await collection.findOne({ email });
@@ -182,13 +178,15 @@ export const DELETE = async (req) => {
     // Ta bort användaren från databasen
     await collection.deleteOne({ email });
 
-    return new Response(
-      JSON.stringify({ message: "Användare borttagen." }),
-      { status: 200 }
-    );
+    return new Response(JSON.stringify({ message: "Användare borttagen." }), {
+      status: 200,
+    });
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: "Fel vid anslutning till databasen eller borttagning av användare." }),
+      JSON.stringify({
+        error:
+          "Fel vid anslutning till databasen eller borttagning av användare.",
+      }),
       { status: 500 }
     );
   }
