@@ -45,7 +45,7 @@ const LoginForm = () => {
         />
         <button
           type="submit"
-          className="mt-2 transition duration-500 ease-out text-black bg-yellow_1 py-3 px-10 rounded-full hover:scale-105"
+          className="shadow-md shadow-black mt-2 transition duration-500 ease-out text-black bg-yellow_1 py-3 px-10 rounded-full hover:scale-105"
         >
           Logga in
         </button>
