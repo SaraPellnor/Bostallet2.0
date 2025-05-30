@@ -34,3 +34,12 @@ body {
 .gradiantBg {
   background: linear-gradient(to right, #7511be, #b414b3);
 }
+
+.league-gothic {
+  font-family: "League Gothic", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 1px;
+  
+}

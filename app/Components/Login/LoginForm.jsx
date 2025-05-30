@@ -2,7 +2,7 @@
 import { useUserContext } from "../../context/UserContext";
 import { handleLogIn } from "../../functions/functions";
 
-const Login = () => {
+const LoginForm = () => {
   const {
     email,
     setEmail,
@@ -20,13 +20,13 @@ const Login = () => {
   };
 
   return (
-    <div className=" p-5 w-full mx-auto">
+    <div className="z-30 px-14 mx-auto w-full">
       <form
-        className="flex flex-col justify-around gap-4"
+        className="text-[20px] flex flex-col justify-around gap-2"
         onSubmit={handleSubmit}
       >
         <input
-          className="px-10 py-4"
+          className="px-10 py-3 rounded-full"
           placeholder="e-post"
           type="email"
           value={email}
@@ -35,7 +35,7 @@ const Login = () => {
           required
         />
         <input
-          className="px-10 py-4"
+          className="px-10 py-3 rounded-full"
           placeholder="lösenord"
           type="password"
           value={password}
@@ -45,14 +45,14 @@ const Login = () => {
         />
         <button
           type="submit"
-          className="transition duration-500 ease-out text-font font-bold gradiantBg py-4 px-10 rounded-md hover:scale-105"
+          className="mt-2 transition duration-500 ease-out text-black bg-yellow_1 py-3 px-10 rounded-full hover:scale-105"
         >
-          Verifiera dig
+          Logga in
         </button>
-        {message && <p className=" text-center text-red-500">{message}</p>}
+        {message && <p className="bg-black bg-opacity-50 text-center text-red-500">{message}</p>}
       </form>
     </div>
   );
 };
 
-export default Login;
+export default LoginForm;
