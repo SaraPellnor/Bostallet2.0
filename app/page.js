@@ -32,7 +32,7 @@ const page = async () => {
         src={snap}
       />
     
-      <div className="z-30 text-[16px] md:text-[28px] w-4/5 pl-5 pr-10 pt-10 font-bold fixed top-16">
+      <div className="z-30 text-[16px] md:text-[28px] w-4/5 max-w-[1000px] pl-5 pr-10 pt-10 font-bold fixed top-16">
         Vill du vara med och skapa en trygg och meningsfull plats för unga? Här
         kan du enkelt boka in dig och vara en aktiv vuxen i Frillesås. För att
         bli godkänd behöver du lämna in ett giltigt utdrag ur
