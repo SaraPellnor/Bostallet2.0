@@ -93,10 +93,10 @@ const AdminPanel = () => {
     const confirmed = confirm("Vill du radera medarbetaren?");
     if (confirmed) {
       deleteUser(email);
-      window.location.reload();    } else {
+      window.location.reload();
+    } else {
       return;
     }
-  
   };
 
   useEffect(() => {
@@ -108,156 +108,163 @@ const AdminPanel = () => {
   return loading ? (
     <Loading />
   ) : (
-    <>  <Header />
-    <div className=" flex flex-col justify-center gap-5 text-xl mt-1">
-      <div className=" text-center pt-2 font-bold text-2xl">
-        Lägg till ny medarbetare
-      </div>
-      <NewUser setIsAdmin={setIsAdminCheckBox} isAdmin={isAdminCheckBox} />
-      <div className=" text-center pt-2 font-bold text-2xl">Medarbetare</div>
+    <>
+      {" "}
+      <Header />
+      <div className=" flex flex-col justify-center gap-5 text-xl mt-1 pb-10">
+        <div className=" text-center pt-2 font-bold text-2xl">
+          Lägg till ny medarbetare
+        </div>
+        <NewUser setIsAdmin={setIsAdminCheckBox} isAdmin={isAdminCheckBox} />
+        <div className=" text-center pt-2 font-bold text-2xl">Medarbetare</div>
 
-      {users.map((item, i) =>
-        edit == item.name ? (
-          <div key={i} className="flex flex-col bg-white shadow-md">
-            <div className=" font-bold flex justify-between bg-purple_1 text-white p-3">
-              <input
-                className="w-[60%] bg-purple_1"
-                placeholder={item.name}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              ></input>
-              <div className="flex gap-2 items-center justify-end">
+        {users.map((item, i) =>
+          edit == item.name ? (
+            <div key={i} className="flex flex-col bg-white shadow-md">
+              <div className=" font-bold flex justify-between bg-purple_1 text-white p-3">
+                <div className="flex items-center">
+                  <p className="pr-2 ">{i + 1}.</p>
+                  <input
+                    className="w-[60%] bg-purple_1"
+                    placeholder={item.name}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  ></input>
+                </div>
+                <div className="flex gap-2 items-center justify-end">
+                  <input
+                    className="w-[50%] bg-purple_1"
+                    placeholder={item.mobile}
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                  ></input>
+                  <button
+                    onClick={() => handleSave(item, false, false)}
+                    className=" px-3 py-1 rounded-md bg-green-500"
+                  >
+                    Spara
+                  </button>
+                  <FaRegTrashAlt
+                    onClick={() => handleDelete(item.email)}
+                    className="cursor-pointer text-red-500"
+                  />
+                  <LuUndo2
+                    className="text-2xl cursor-pointer"
+                    onClick={() => setEdit(false)}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-between px-3 py-2">
+                <p className="font-bold">E-post:</p>
                 <input
-                  className="w-[50%] bg-purple_1"
-                  placeholder={item.mobile}
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={item.email}
                 ></input>
-                <button
-                  onClick={() => handleSave(item, false, false)}
-                  className=" px-3 py-1 rounded-md bg-green-500"
-                >
-                  Spara
-                </button>
-                <FaRegTrashAlt
-                  onClick={() => handleDelete(item.email)}
-                  className="cursor-pointer text-red-500"
-                />
-                <LuUndo2 className="text-2xl cursor-pointer" onClick={() =>setEdit(false)} />
+              </div>
+              <div className="flex justify-between px-3 py-2">
+                <p className="font-bold">Admin:</p>
+                <p>
+                  {isAdminCheckBox2 ? (
+                    <MdOutlineCheckBox
+                      onClick={() => setIsAdminCheckBox2(false)}
+                      className="cursor-pointer text-2xl text-green-500"
+                    />
+                  ) : (
+                    <MdOutlineCheckBoxOutlineBlank
+                      onClick={() => setIsAdminCheckBox2(true)}
+                      className="text-2xl cursor-pointer"
+                    />
+                  )}
+                </p>
+              </div>
+              <p className="font-bold pl-3">Veckor:</p>
+              <div className="flex flex-col gap-3 justify-end px-3 py-2">
+                {item.weeks.map((week, i) => (
+                  <div
+                    key={i}
+                    className=" flex flex-col gap-1 p-2 bg-black bg-opacity-80 text-white "
+                  >
+                    <p>V. {week.week}</p>
+                    {week.pass.find((item) => item == 1) && (
+                      <div
+                        onClick={() => deletePass(week.week, 1, item)}
+                        className="cursor-pointer p-1 bg-red-500 flex justify-between items-center px-3"
+                      >
+                        <p> Pass 1 </p>
+                        <FaRegTrashAlt />
+                      </div>
+                    )}
+                    {week.pass.find((item) => item == 2) && (
+                      <div
+                        onClick={() => deletePass(week.week, 2, item)}
+                        className="cursor-pointer p-1 bg-red-500 flex justify-between items-center px-3"
+                      >
+                        <p> Pass 2 </p>
+                        <FaRegTrashAlt />
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="flex justify-between px-3 py-2">
-              <p className="font-bold">E-post:</p>
-              <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={item.email}
-              ></input>
-            </div>
-            <div className="flex justify-between px-3 py-2">
-              <p className="font-bold">Admin:</p>
-              <p>
-                {isAdminCheckBox2 ? (
-                  <MdOutlineCheckBox
-                    onClick={() => setIsAdminCheckBox2(false)}
-                    className="cursor-pointer text-2xl text-green-500"
-                  />
-                ) : (
-                  <MdOutlineCheckBoxOutlineBlank
-                    onClick={() => setIsAdminCheckBox2(true)}
+          ) : (
+            <div key={i} className="flex flex-col bg-white shadow-md">
+              <div className=" font-bold flex justify-between bg-purple_1 text-white p-3">
+                <div className="flex items-center">
+                  <p className="pr-2 ">{i + 1}.</p>
+                  <p className="">{item.name}</p>
+                </div>
+                <div className="flex gap-4 items-center">
+                  <p>{item.mobile}</p>
+                  <FaUserEdit
+                    onClick={() =>
+                      handleEdit(item.admin, item.name, item.mobile, item.email)
+                    }
                     className="text-2xl cursor-pointer"
                   />
-                )}
-              </p>
-            </div>
-            <p className="font-bold pl-3">Veckor:</p>
-            <div className="flex flex-col gap-3 justify-end px-3 py-2">
-              {item.weeks.map((week, i) => (
-                <div
-                  key={i}
-                  className=" flex flex-col gap-1 p-2 bg-black bg-opacity-80 text-white "
-                >
-                  <p>V. {week.week}</p>
-                  {week.pass.find((item) => item == 1) && (
-                    <div
-                      onClick={() => deletePass(week.week, 1, item)}
-                      className="cursor-pointer p-1 bg-red-500 flex justify-between items-center px-3"
-                    >
-                     <p> Pass 1 </p>
-                     <FaRegTrashAlt />
-
-
-                    </div>
-                    
-                  )}
-                  {week.pass.find((item) => item == 2) && (
-                    <div
-                    onClick={() => deletePass(week.week, 2, item)}
-                    className="cursor-pointer p-1 bg-red-500 flex justify-between items-center px-3"
-                  >
-                   <p> Pass 2 </p>
-                   <FaRegTrashAlt />
-
-
-                  </div>
-                  )}
+                  <FaRegTrashAlt
+                    onClick={() => handleDelete(item.email)}
+                    className="text-red-500 cursor-pointer"
+                  />
                 </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div key={i} className="flex flex-col bg-white shadow-md">
-            <div className=" font-bold flex justify-between bg-purple_1 text-white p-3">
-              <p className="">{item.name}</p>
-              <div className="flex gap-4 items-center">
-                <p>{item.mobile}</p>
-                <FaUserEdit 
-                  onClick={() =>
-                    handleEdit(item.admin, item.name, item.mobile, item.email)
-                  }
-                  className="text-2xl cursor-pointer"
-                />
-                <FaRegTrashAlt
-                  onClick={() => handleDelete(item.email)}
-                  className="text-red-500 cursor-pointer"
-                />
+              </div>
+              <div className="flex flex-wrap justify-between px-3 py-2">
+                <p className="font-bold">E-post:</p>{" "}
+                <p className="overflow-y-auto max-w-[241px]">{item.email}</p>
+              </div>
+              <div className="flex justify-between px-3 py-2">
+                <p className="font-bold">Admin:</p>{" "}
+                <p>
+                  {item.admin ? (
+                    <MdOutlineCheckBox className="text-2xl text-green-500" />
+                  ) : (
+                    <MdOutlineCheckBoxOutlineBlank className="text-2xl" />
+                  )}
+                </p>
+              </div>
+              <p className="font-bold pl-3">Veckor:</p>
+              <div className="flex flex-col gap-3 px-3 py-2">
+                {item.weeks.map((week, i) => (
+                  <div
+                    key={i}
+                    className=" flex flex-col gap-1 p-2 bg-black text-white "
+                  >
+                    <p>V. {week.week}</p>
+                    {week.pass.find((item) => item == 1) && (
+                      <p className="p-1 bg-green-500">Pass 1</p>
+                    )}
+                    {week.pass.find((item) => item == 2) && (
+                      <p className="p-1 bg-green-500">Pass 2</p>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="flex flex-wrap justify-between px-3 py-2">
-              <p className="font-bold">E-post:</p> <p className="overflow-y-auto max-w-[241px]">{item.email}</p>
-            </div>
-            <div className="flex justify-between px-3 py-2">
-              <p className="font-bold">Admin:</p>{" "}
-              <p>
-                {item.admin ? (
-                  <MdOutlineCheckBox className="text-2xl text-green-500" />
-                ) : (
-                  <MdOutlineCheckBoxOutlineBlank className="text-2xl" />
-                )}
-              </p>
-            </div>
-            <p className="font-bold pl-3">Veckor:</p>
-            <div className="flex flex-col gap-3 px-3 py-2">
-              {item.weeks.map((week, i) => (
-                <div
-                  key={i}
-                  className=" flex flex-col gap-1 p-2 bg-black text-white "
-                >
-                  <p>V. {week.week}</p>
-                  {week.pass.find((item) => item == 1) && (
-                    <p className="p-1 bg-green-500">Pass 1</p>
-                  )}
-                  {week.pass.find((item) => item == 2) && (
-                    <p className="p-1 bg-green-500">Pass 2</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )
-      )}
-      <ScrollToTopButton />
-    </div>
+          )
+        )}
+        <ScrollToTopButton />
+      </div>
     </>
   );
 };
