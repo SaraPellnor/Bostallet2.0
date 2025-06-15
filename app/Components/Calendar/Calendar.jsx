@@ -1,8 +1,11 @@
 "use client";
 
 import { IoIosPersonAdd } from "react-icons/io";
+import confetti from "../../images/confetti.gif";
+import Image from "next/image";
+
 import { TiDelete } from "react-icons/ti";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getISOWeek } from "date-fns";
 import Loading from "../Loading/Loading";
 import childrenHolidayWeeks from "../../utils/getHolidaysWeek";
@@ -37,6 +40,32 @@ const Calendar = () => {
     fetchData(setLoading, setUserData);
   }, [message]);
 
+  const [showconfetti, setshowConfetti] = useState(false);
+
+  const handleAdd = (
+    passCount,
+    setMessage,
+    weekNumber,
+    passNumber,
+    userIn,
+    user
+  ) => {
+  
+    passCount > 2 && setshowConfetti(true);
+      const timer = setTimeout(() => {
+      setshowConfetti(false);
+    }, 2000);
+   
+    handleSchema(
+      setMessage,
+      weekNumber,
+      passNumber,
+      userIn ? "remove" : "add",
+      user
+    );
+     timer()
+  };
+
   // Rendera en cell för ett specifikt pass
   const renderPassCell = (weekNumber, passNumber) => {
     let passCount = 0;
@@ -55,40 +84,42 @@ const Calendar = () => {
     });
     return (
       <div
-        className={`pb-5 px-5 py-3 ${
+        className={`relative pb-5 px-5 py-3 ${
           (passNumber === 1 && passCount > 3) ||
-          (passNumber === 2 && passCount > 1)
+          (passNumber === 2 && passCount > 3)
             ? "opacity-50"
             : ""
         } pb-5 px-5 py-3`}
       >
+
         <div className="bg-purple_2 w-full px-2 flex justify-between">
           {passNumber == 1 ? (
             <>
               <p>PASS 1</p>
-              <p>18.00-20.30</p>
+              <p>18.00-20.00</p>
             </>
           ) : (
             <>
               <p>PASS 2</p>
-              <p>20.30-23.00</p>
+              <p>20.00-22.00</p>
             </>
           )}
         </div>
         {!userIn &&
           ((passNumber == 1 && passCount < 4) ||
-            (passNumber == 2 && passCount < 2)) && (
+            (passNumber == 2 && passCount < 4)) && (
             <button
               onClick={() =>
-                handleSchema(
+                handleAdd(
+                  passCount,
                   setMessage,
                   weekNumber,
                   passNumber,
-                  userIn ? "remove" : "add",
+                  userIn,
                   user
                 )
               }
-              className=" w-full flex items-center h-12 p-1 border-b-2 border-yellow_1"
+              className=" w-full flex items-center h-12 p-1 border-b-2 border-gray-700"
             >
               <p className="text-green-400 sm:text-[20px] text-[15px]">
                 Lägg till mig
@@ -101,7 +132,7 @@ const Calendar = () => {
           )}
         {participants.map((name, index) => (
           <div
-            className={`px-2 flex items-center p-1 border-b-2 border-yellow_1 ${
+            className={`px-2 flex items-center p-1 border-b-2 border-gray-700 ${
               name === user ? "text-green-400" : ""
             }`}
             key={index}
@@ -132,7 +163,7 @@ const Calendar = () => {
           </div>
         ))}
         {((passNumber === 1 && passCount > 3) ||
-          (passNumber === 2 && passCount > 1)) && (
+          (passNumber === 2 && passCount > 3)) && (
           <div className="flex justify-end items-center h-12 w-full">
             <p className="self-center m-auto text-yellow-400 font-bold">
               FULLT
@@ -199,12 +230,25 @@ const Calendar = () => {
     <Loading />
   ) : (
     <div className="w-full max-w-[800px] h-full flex flex-col">
+       <div
+          className={`w-[100%] h-[100%] left-0 z-[1] ${
+            showconfetti 
+              ? "absolute"
+              : "hidden"
+          }`}
+        >
+          <Image
+            src={showconfetti && confetti}
+            alt="Confetti"
+            className=" w-full h-full object-contain"
+          />
+        </div>
       <Header />
       {currentWeek != 52 && (
         <p className="gradiantBg p-4 text-white text-2xl">{currentYear}</p>
       )}
       {generateRows()}
-<ScrollToTopButton /> 
+      <ScrollToTopButton />
     </div>
   );
 };
