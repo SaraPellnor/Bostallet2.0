@@ -22,7 +22,7 @@ const page = async () => {
         src={Bostallet20}
       />
       <Image
-        className="z-20 fixed left-1/2 -bottom-1/4 transform -translate-x-1/2 min-w-[150%]"
+        className="z-20 fixed left-1/2 -bottom-1/2 transform -translate-x-1/2 min-w-[800px] max-w-[800px]"
         alt="circle"
         src={circle}
       />
@@ -32,7 +32,7 @@ const page = async () => {
         src={snap}
       />
     
-      <div className="z-30 text-[16px] md:text-[28px] w-4/5 max-w-[1000px] pl-5 pr-10 pt-10 font-bold fixed top-16">
+      <div className="z-30 text-[16px] md:text-[28px] w-4/5 max-w-[800px] pl-5 pr-10 pt-10 font-bold fixed top-16">
         Vill du vara med och skapa en trygg och meningsfull plats för unga? Här
         kan du enkelt boka in dig och vara en aktiv vuxen i Frillesås. För att
         bli godkänd behöver du lämna in ett giltigt utdrag ur
