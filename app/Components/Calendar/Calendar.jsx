@@ -87,12 +87,12 @@ const Calendar = () => {
         className={`relative pb-5 px-5 py-3 ${
           (passNumber === 1 && passCount > 3) ||
           (passNumber === 2 && passCount > 3)
-            ? "opacity-50"
+            ? "opacity-35"
             : ""
         } pb-5 px-5 py-3`}
       >
 
-        <div className="bg-purple_2 w-full px-2 flex justify-between">
+        <div className="bg-purple_2 rounded-lg w-full px-2 py-1 flex justify-between">
           {passNumber == 1 ? (
             <>
               <p>PASS 1</p>
@@ -166,7 +166,7 @@ const Calendar = () => {
           (passNumber === 2 && passCount > 3)) && (
           <div className="flex justify-end items-center h-12 w-full">
             <p className="self-center m-auto text-yellow-400 font-bold">
-              FULLT
+              Full styrka!
             </p>
           </div>
         )}
@@ -186,7 +186,7 @@ const Calendar = () => {
             </p>
           )}
 
-          <div className="text-white text-xl bg-black" key={weekNumber}>
+          <div className="text-white text-xl bg-black shadow-xl shadow-black/70 rounded-b-md" key={weekNumber}>
             <div className="text-2xl font-bold">
               {hollidays.some(
                 (item) =>
@@ -229,20 +229,19 @@ const Calendar = () => {
   return loading ? (
     <Loading />
   ) : (
-    <div className="w-full max-w-[800px] h-full flex flex-col">
-       <div
-          className={`w-[100%] h-[100%] left-0 z-[1] ${
-            showconfetti 
-              ? "absolute"
-              : "hidden"
-          }`}
-        >
-          <Image
-            src={showconfetti && confetti}
-            alt="Confetti"
-            className=" w-full h-full object-contain"
-          />
-        </div>
+    <div className="relative w-full max-w-[800px] h-full flex flex-col">
+     <div
+  className={`fixed inset-0 flex items-center justify-center w-full h-full z-[1] ${
+    showconfetti ? "" : "hidden"
+  }`}
+>
+  <Image
+    src={showconfetti && confetti}
+    alt="Confetti"
+    className="w-2/3 h-2/3 object-contain"
+  />
+</div>
+
       <Header />
       {currentWeek != 52 && (
         <p className="gradiantBg p-4 text-white text-2xl">{currentYear}</p>
