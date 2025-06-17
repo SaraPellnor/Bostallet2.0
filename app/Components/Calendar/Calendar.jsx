@@ -179,14 +179,14 @@ const Calendar = () => {
     return Array.from({ length: 26 }, (_, i) => {
       const weekNumber = ((currentWeek + i - 1) % 52) + 1;
       return (
-        <div className="mb-3" key={weekNumber}>
+        <div className="mb-6" key={weekNumber}>
           {weekNumber == 1 && i > 0 && (
             <p className="gradiantBg p-4 text-white text-2xl">
               {currentYear + 1}
             </p>
           )}
 
-          <div className="text-white text-xl bg-black shadow-xl shadow-black/70 rounded-b-md" key={weekNumber}>
+          <div className={`text-white text-xl bg-black shadow-xl shadow-black/70 rounded-b-md ${i===0 || weekNumber === 1 ? "" : " rounded-t-md"}`} key={weekNumber}>
             <div className="text-2xl font-bold">
               {hollidays.some(
                 (item) =>
