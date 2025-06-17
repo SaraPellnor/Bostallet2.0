@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 const RegistryForm = () => {
   return (
-    <div className="text-[20px] z-30 w-full pl-5 mb-10 flex flex-col justify-center items-start">
+    <div className="text-[20px] z-40 w-full pl-5 flex flex-col justify-center items-start">
       <div className="flex flex-col items-center gap-2">
         {" "}
         <button

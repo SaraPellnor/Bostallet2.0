@@ -15,7 +15,7 @@ const page = async () => {
   user && redirect("/kalender"); // Skicka tillbaka till startsidan om det inte finns en token
 
   return (
-    <div className="league-gothic overflow-hidden max-w-[700px] bg-background w-full flex flex-col h-[100vh] place-content-end pb-[100px]">
+    <div className="league-gothic overflow-hidden max-w-[700px] bg-background w-full flex gap-5 flex-col min-h-[600px] h-[100vh] place-content-end pb-[100px]">
          <Image
         className="z-40 fixed left-1/2 transform -translate-x-1/2 -top-14  w-[450px]"
         alt="Bostallet20"
