@@ -17,6 +17,7 @@ import {
 } from "../../functions/functions";
 import Header from "../Header/Header";
 import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
+import Search from "../Search/search";
 const Calendar = () => {
   const {
     user,
@@ -50,12 +51,11 @@ const Calendar = () => {
     userIn,
     user
   ) => {
-  
     passCount > 2 && setshowConfetti(true);
-      const timer = setTimeout(() => {
+    const timer = setTimeout(() => {
       setshowConfetti(false);
     }, 2000);
-   
+
     handleSchema(
       setMessage,
       weekNumber,
@@ -63,7 +63,7 @@ const Calendar = () => {
       userIn ? "remove" : "add",
       user
     );
-     timer()
+    timer();
   };
 
   // Rendera en cell för ett specifikt pass
@@ -91,7 +91,6 @@ const Calendar = () => {
             : ""
         } pb-5 px-5 py-3`}
       >
-
         <div className="bg-purple_2 rounded-lg w-full px-2 py-1 flex justify-between">
           {passNumber == 1 ? (
             <>
@@ -137,7 +136,7 @@ const Calendar = () => {
             }`}
             key={index}
           >
-            <p className="w-2/3"> {name}</p>
+            <p data-name={name} className="w-2/3"> {name}</p>
             {name == user && (
               <div
                 onClick={() =>
@@ -186,7 +185,12 @@ const Calendar = () => {
             </p>
           )}
 
-          <div className={`text-white text-xl bg-black shadow-xl shadow-black/70 rounded-b-md ${i===0 || weekNumber === 1 ? "" : " rounded-t-md"}`} key={weekNumber}>
+          <div
+            className={`text-white text-xl bg-black shadow-xl shadow-black/70 rounded-b-md ${
+              i === 0 || weekNumber === 1 ? "" : " rounded-t-md"
+            }`}
+            key={weekNumber}
+          >
             <div className="text-2xl font-bold">
               {hollidays.some(
                 (item) =>
@@ -202,18 +206,18 @@ const Calendar = () => {
                     <div className="p-3" key={index}>
                       <div className="flex gap-2 items-end">
                         {" "}
-                        <p> Fredag V. {weekNumber}</p>
-                        <p className="text-lg text-blue-200">
+                        <p data-name={weekNumber}> Fredag V. {weekNumber}</p>
+                        <p data-name={fridaysArray[i]} className="text-lg text-blue-200">
                           {fridaysArray[i]}
                         </p>
                       </div>
-                      <p className="text-blue-400 font-thin">{item.holiday}</p>
+                      <p data-name={item.holiday} className="text-blue-400 font-thin">{item.holiday}</p>
                     </div>
                   ))
               ) : (
                 <div className="p-3 flex gap-2 items-end">
-                  <p>Fredag V. {weekNumber}</p>
-                  <p className="text-lg text-green-200">{fridaysArray[i]}</p>
+                  <p data-name={weekNumber}>Fredag V. {weekNumber}</p>
+                  <p data-name={fridaysArray[i]} className="text-lg text-green-200">{fridaysArray[i]}</p>
                 </div>
               )}
             </div>
@@ -230,22 +234,29 @@ const Calendar = () => {
     <Loading />
   ) : (
     <div className="relative w-full max-w-[800px] h-full flex flex-col">
-     <div
-  className={`fixed inset-0 flex items-center justify-center w-full h-full z-[1] ${
-    showconfetti ? "" : "hidden"
-  }`}
->
-  <Image
-    src={showconfetti && confetti}
-    alt="Confetti"
-    className="w-2/3 h-2/3 object-contain"
-  />
-</div>
+      <div
+        className={`fixed inset-0 flex items-center justify-center w-full h-full z-[1] ${
+          showconfetti ? "" : "hidden"
+        }`}
+      >
+        <Image
+          src={showconfetti && confetti}
+          alt="Confetti"
+          className="w-2/3 h-2/3 object-contain"
+        />
+      </div>
 
       <Header />
       {currentWeek != 52 && (
-        <p className="gradiantBg p-4 text-white text-2xl">{currentYear}</p>
+        <div className=" gradiantBg py-4"><p className="text-white text-2xl pl-3">{currentYear}</p>   <div className="flex justify-start mr-16 text-xl pt-2">
+        
+        <Search />
+      </div></div>
       )}
+      {/* <div className="flex justify-start my-4 mx-6">
+        
+        <Search />
+      </div> */}
       {generateRows()}
       <ScrollToTopButton />
     </div>
