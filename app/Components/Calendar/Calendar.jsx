@@ -17,7 +17,7 @@ import {
 } from "../../functions/functions";
 import Header from "../Header/Header";
 import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
-import Search from "../Search/search";
+import Search from "../Search/Search";
 const Calendar = () => {
   const {
     user,
