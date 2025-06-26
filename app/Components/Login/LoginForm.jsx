@@ -20,7 +20,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stoppa standardformuläret från att skicka GET-request
-    handleLogIn(email, password, setMessage, setUser, setAdmin); // Din funktion som redan funkar
+    handleLogIn(email.toLowerCase(), password, setMessage, setUser, setAdmin); // Din funktion som redan funkar
   };
 
   return (
