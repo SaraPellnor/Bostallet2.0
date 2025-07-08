@@ -19,9 +19,9 @@ const RegistryForm = () => {
         <button
           type="submit"
           className="shadow-md shadow-black transition bg-white duration-500 ease-out text-black py-2 px-10 rounded-full hover:scale-105"
-          onClick={() => redirect("/kontakt")}
+          onClick={() => redirect("https://docs.google.com/forms/d/e/1FAIpQLSd5BczvLkAg96kPEfCRNlMyLUycnxroDoj9kIk-nymK_on8NQ/viewform")}
         >
-          Kontakta oss här
+          Registrera dig
         </button>
       </div>
     </div>
