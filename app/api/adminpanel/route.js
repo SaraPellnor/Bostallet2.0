@@ -1,7 +1,16 @@
 import clientPromise from "../../../lib/mongodb";
-
+import { cookies } from "next/headers";
 export const GET = async () => {
   try {
+           const cookieStore = await cookies();
+        const isUser = cookieStore.get("user");    
+        if (isUser) {
+          console.log("User is authenticated");
+        } else {
+          return new Response(JSON.stringify({ message: "Data hittades inte!" }), {
+            status: 404,
+          });
+        }
     const client = await clientPromise;
     const db = client.db("db"); // Här används "db" om du inte skickar in ett namn
     const collection = db.collection("users");
