@@ -6,7 +6,7 @@ const RegistryForm = () => {
       <div className="flex flex-col items-center gap-2">
         <Button
           url={
-            "https://l.facebook.com/l.php?u=https%3A%2F%2Fpolisen.se%2Ftjanster-tillstand%2Fbelastningsregistret%2Fbarn-annan-verksamhet%2F%3Ffbclid%3DIwZXh0bgNhZW0CMTAAYnJpZBEwYnpOUDE1eDc2SExITTFrVAEeG4XbsJK8trvk2wkLSQrwP1J2xO5xXFppYXiJV5UIT4PrGx-ShRvY9Mm3cCg_aem_IHBYhizoL5YLBpG-hN8B2Q&h=AT33qCTsrmAuxisMobFicrVznGJsozHofl4xFLTWDA9tDf3ZtqrewYSEWHbe8vz5YtZA0-ytXNopWou-2gaMWcQkWguGSbBxJKfjguEYtJjaiXaOGCvkZLNKdATNQ1pJGERcgY4pW9J6RRtpC5Nd"
+            "https://polisen.se/tjanster-tillstand/belastningsregistret/barn-annan-verksamhet/"
           }
         label="Belastningsutdrag"
       />
