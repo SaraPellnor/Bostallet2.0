@@ -2,15 +2,15 @@ import clientPromise from "../../../lib/mongodb";
 import { cookies } from "next/headers";
 export const GET = async () => {
   try {
-           const cookieStore = await cookies();
-        const isUser = cookieStore.get("user");    
-        if (isUser) {
-          console.log("User is authenticated");
-        } else {
-          return new Response(JSON.stringify({ message: "Data hittades inte!" }), {
-            status: 404,
-          });
-        }
+    const cookieStore = await cookies();
+    const isUser = cookieStore.get("user");
+    if (isUser) {
+      console.log("User is authenticated");
+    } else {
+      return new Response(JSON.stringify({ message: "Data hittades inte!" }), {
+        status: 404,
+      });
+    }
     const client = await clientPromise;
     const db = client.db("db"); // Här används "db" om du inte skickar in ett namn
     const collection = db.collection("users");
@@ -90,7 +90,7 @@ export const POST = async (req) => {
 // jag behöver skicka med värdet för user...       <--------------------------------------
 
 export const PUT = async (req) => {
-  const { week, pass, user, name, mobile, email, isAdminCheckBox } =
+  const { week, pass, user, name, mobile, email, isAdminCheckBox, stars } =
     await req.json();
 
   try {
@@ -114,6 +114,7 @@ export const PUT = async (req) => {
       mobile,
       email,
       admin: isAdminCheckBox,
+      stars: Number(stars),
     };
 
     // Uppdatera namn, mobil, email, admin-status
@@ -123,13 +124,10 @@ export const PUT = async (req) => {
     if (week && pass !== undefined) {
       // Ta bort passet från rätt vecka
       await collection.updateOne(
+        { email: user.email },
         {
-          email: user.email,
-        },
-        {
-          $pull: {
-            [`weeks.$[weekElem].pass`]: pass,
-          },
+          $pull: { [`weeks.$[weekElem].pass`]: pass },
+          $inc: { stars: -1 }, // minskar stars med 1
         },
         {
           arrayFilters: [{ "weekElem.week": week }],

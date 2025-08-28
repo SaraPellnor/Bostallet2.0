@@ -167,7 +167,8 @@ export const adminDeletePass = async (
   name,
   mobile,
   email,
-  isAdminCheckBox
+  isAdminCheckBox,
+  stars
 ) => {
   try {
     const res = await fetch("/api/adminpanel", {
@@ -183,6 +184,7 @@ export const adminDeletePass = async (
         mobile: mobile,
         email: email,
         isAdminCheckBox: isAdminCheckBox,
+        stars: stars
       }),
     });
 
@@ -209,3 +211,28 @@ export const deleteUser = async (email) => {
     console.error("Error:", error);
   }
 };
+
+export const addMessage = async (week, passNumber, message, name) => {
+  try {
+    const res = await fetch("/api/calendar/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,        // användarens namn
+        message: message, 
+        week, 
+        passNumber, 
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Something went wrong");
+    return data;
+  } catch (err) {
+    console.error("Failed to add message:", err);
+    return { error: err.message };
+  }
+};
+

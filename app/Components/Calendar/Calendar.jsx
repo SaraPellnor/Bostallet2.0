@@ -1,5 +1,4 @@
 "use client";
-
 import { IoIosPersonAdd } from "react-icons/io";
 import confetti from "../../images/confetti.gif";
 import Image from "next/image";
@@ -18,6 +17,9 @@ import {
 import Header from "../Header/Header";
 import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 import Search from "../Search/Search";
+import AddMessageIcon from "../AddMessageIcon/AddMessageIcon";
+import MessageIcon from "../MessageIcon/MessageIcon";
+import InfoHeader from "../InfoHeader/InfoHeader";
 const Calendar = () => {
   const {
     user,
@@ -40,9 +42,7 @@ const Calendar = () => {
     setHollidays(childrenHolidayWeeks);
     fetchData(setLoading, setUserData);
   }, [message]);
-
   const [showconfetti, setshowConfetti] = useState(false);
-
   const handleAdd = (
     passCount,
     setMessage,
@@ -76,12 +76,23 @@ const Calendar = () => {
         .filter(
           (week) => week.week === weekNumber && week.pass.includes(passNumber)
         )
-        .map(() => {
+        .map((week) => {
           if (element.name === user) userIn = true;
           passCount++;
-          return element.name;
+
+          // Hämta meddelandet för aktuell vecka + pass
+          const messageObj = week.messages
+            ? week.messages.find((msg) => msg.pass === passNumber)
+            : null;
+
+          return {
+            name: element.name,
+            stars: element.stars,
+            message: messageObj ? messageObj.message : null, // skicka bara texten
+          };
         });
     });
+
     return (
       <div
         className={`relative pb-5 px-5 py-3 ${
@@ -129,15 +140,22 @@ const Calendar = () => {
               />
             </button>
           )}
-        {participants.map((name, index) => (
+        {participants.map((participant, index) => (
           <div
-            className={`px-2 flex items-center p-1 border-b-2 border-gray-700 ${
-              name === user ? "text-green-400" : ""
+            className={`flex items-center py-1 border-b-2 border-gray-700 ${
+              participant.name === user ? "text-green-400" : ""
             }`}
             key={index}
           >
-            <p data-name={name} className="w-2/3"> {name}</p>
-            {name == user && (
+
+            <p data-name={participant.name} className="w-full">
+              {participant.name}
+            </p>
+
+            {participant.message && participant.name != user && (
+              <MessageIcon existingMessage={participant.message} />
+            )}
+            {participant.name === user && (
               <div
                 onClick={() =>
                   handleSchema(
@@ -158,9 +176,19 @@ const Calendar = () => {
                   className="text-red-400 text-3xl"
                 />
               </div>
+              
+            )}
+                        {participant.name == user && (
+              <AddMessageIcon
+                name={participant.name}
+                week={weekNumber}
+                passNumber={passNumber}
+                existingMessage={participant.message}
+              />
             )}
           </div>
         ))}
+
         {((passNumber === 1 && passCount > 3) ||
           (passNumber === 2 && passCount > 3)) && (
           <div className="flex justify-end items-center h-12 w-full">
@@ -207,17 +235,30 @@ const Calendar = () => {
                       <div className="flex gap-2 items-end">
                         {" "}
                         <p data-name={weekNumber}> Fredag V. {weekNumber}</p>
-                        <p data-name={fridaysArray[i]} className="text-lg text-blue-200">
+                        <p
+                          data-name={fridaysArray[i]}
+                          className="text-lg text-blue-200"
+                        >
                           {fridaysArray[i]}
                         </p>
                       </div>
-                      <p data-name={item.holiday} className="text-blue-400 font-thin">{item.holiday}</p>
+                      <p
+                        data-name={item.holiday}
+                        className="text-blue-400 font-thin"
+                      >
+                        {item.holiday}
+                      </p>
                     </div>
                   ))
               ) : (
                 <div className="p-3 flex gap-2 items-end">
                   <p data-name={weekNumber}>Fredag V. {weekNumber}</p>
-                  <p data-name={fridaysArray[i]} className="text-lg text-green-200">{fridaysArray[i]}</p>
+                  <p
+                    data-name={fridaysArray[i]}
+                    className="text-lg text-green-200"
+                  >
+                    {fridaysArray[i]}
+                  </p>
                 </div>
               )}
             </div>
@@ -245,13 +286,16 @@ const Calendar = () => {
           className="w-2/3 h-2/3 object-contain"
         />
       </div>
+      <InfoHeader />
 
       <Header />
       {currentWeek != 52 && (
-        <div className=" gradiantBg py-4"><p className="text-white text-2xl pl-3">{currentYear}</p>   <div className="flex justify-start mr-16 text-xl pt-2">
-        
-        <Search />
-      </div></div>
+        <div className=" gradiantBg py-4">
+          <p className="text-white text-2xl pl-3">{currentYear}</p>{" "}
+          <div className="flex justify-start mr-16 text-xl pt-2">
+            <Search />
+          </div>
+        </div>
       )}
       {/* <div className="flex justify-start my-4 mx-6">
         

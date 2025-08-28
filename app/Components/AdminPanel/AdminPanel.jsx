@@ -1,5 +1,6 @@
 "use client";
 import { LuUndo2 } from "react-icons/lu";
+import { CiStar } from "react-icons/ci";
 
 import {
   MdOutlineCheckBoxOutlineBlank,
@@ -29,6 +30,7 @@ const AdminPanel = () => {
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
+  const [stars, setStars] = useState(0);
 
   const fetchData = async () => {
     try {
@@ -57,19 +59,20 @@ const AdminPanel = () => {
     );
     if (confirmed) {
       // Användaren klickade på "Ok"
-      adminDeletePass(week, pass, user, name, mobile, email, isAdminCheckBox2);
+      adminDeletePass(week, pass, user, name, mobile, email, isAdminCheckBox2, stars);
       window.location.reload();
     } else {
       // Användaren klickade på "Avbryt"
       return;
     }
   };
-  const handleEdit = (admin, name, mobile, email) => {
+  const handleEdit = (admin, name, mobile, email, stars) => {
     setName(name);
     setMobile(mobile);
     setEmail(email);
     setEdit(name);
     setIsAdminCheckBox2(admin);
+    setStars(stars);
 
     if (edit.length > 0) {
       const confirmed = confirm("Vill du spara påbörjad först?");
@@ -86,7 +89,7 @@ const AdminPanel = () => {
 
   const handleSave = async (user, pass, week) => {
     setEdit("");
-    adminDeletePass(week, pass, user, name, mobile, email, isAdminCheckBox2);
+    adminDeletePass(week, pass, user, name, mobile, email, isAdminCheckBox2, stars);
     window.location.reload();
   };
 
@@ -117,7 +120,7 @@ const AdminPanel = () => {
         </div>
         <NewUser setIsAdmin={setIsAdminCheckBox} isAdmin={isAdminCheckBox} />
         <div className=" text-center pt-2 font-bold text-2xl">Medarbetare</div>
-             <Search />
+        <Search />
 
         {users
           .slice() // gör en kopia av arrayen
@@ -217,16 +220,34 @@ const AdminPanel = () => {
                     </div>
                   ))}
                 </div>
+                <div className="flex flex-wrap justify-between items-center px-3 py-2">
+                  <p className="font-bold">Antal pass:</p>{" "}
+                  <div className="relative mr-1 text-yellow-300">
+                    <CiStar size={70} />
+                     <input
+                     className="bg-transparent absolute text-center pl-4 inset-0 pt-[2px] flex items-center justify-center text-black font-bold text-[15px] leading-none"
+                  value={stars}
+                  type="number"
+                  onChange={(e) => setStars(e.target.value)}
+                  placeholder={item.stars}
+                ></input>
+                   
+                  </div>
+                </div>
               </div>
             ) : (
-              <div key={i} className="flex flex-col bg-white shadow-md">
+              <div
+                key={i}
+                className=" flex flex-col bg-white shadow-md shadow-stone-700"
+              >
                 <div
                   className={` font-bold flex justify-between bg-purple_1  ${
                     item.admin && "bg-gray-600"
                   } text-white p-3`}
                 >
-                  <div className="flex items-center">
+                  <div className=" flex items-center">
                     <p className="pr-2 ">{i + 1}.</p>
+
                     <p data-name={item.name} className="">
                       {item.name}
                     </p>
@@ -239,7 +260,8 @@ const AdminPanel = () => {
                           item.admin,
                           item.name,
                           item.mobile,
-                          item.email
+                          item.email,
+                          item.stars
                         )
                       }
                       className="text-2xl cursor-pointer"
@@ -251,8 +273,13 @@ const AdminPanel = () => {
                   </div>
                 </div>
                 <div className="flex flex-wrap justify-between px-3 py-2">
-                  <p  className="font-bold">E-post:</p>{" "}
-                  <p data-name={item.email}className="overflow-y-auto max-w-[241px]">{item.email}</p>
+                  <p className="font-bold">E-post:</p>{" "}
+                  <p
+                    data-name={item.email}
+                    className="overflow-y-auto max-w-[241px]"
+                  >
+                    {item.email}
+                  </p>
                 </div>
                 <div className="flex justify-between px-3 py-2">
                   <p className="font-bold">Admin:</p>{" "}
@@ -280,6 +307,15 @@ const AdminPanel = () => {
                       )}
                     </div>
                   ))}
+                </div>
+                <div className="flex flex-wrap justify-between items-center px-3 py-2">
+                  <p className="font-bold">Antal pass:</p>{" "}
+                  <div className="relative mr-1 text-yellow-300">
+                    <CiStar size={70} />
+                    <p className="absolute inset-0 pt-[2px] flex items-center justify-center text-black font-bold text-[15px] leading-none">
+                      {item.stars}
+                    </p>
+                  </div>
                 </div>
               </div>
             )
