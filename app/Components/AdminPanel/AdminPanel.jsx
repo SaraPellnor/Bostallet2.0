@@ -1,6 +1,7 @@
 "use client";
 import { LuUndo2 } from "react-icons/lu";
 import { CiStar } from "react-icons/ci";
+import { IoIosSave } from "react-icons/io";
 
 import {
   MdOutlineCheckBoxOutlineBlank,
@@ -59,7 +60,16 @@ const AdminPanel = () => {
     );
     if (confirmed) {
       // Användaren klickade på "Ok"
-      adminDeletePass(week, pass, user, name, mobile, email, isAdminCheckBox2, stars);
+      adminDeletePass(
+        week,
+        pass,
+        user,
+        name,
+        mobile,
+        email,
+        isAdminCheckBox2,
+        stars
+      );
       window.location.reload();
     } else {
       // Användaren klickade på "Avbryt"
@@ -89,7 +99,16 @@ const AdminPanel = () => {
 
   const handleSave = async (user, pass, week) => {
     setEdit("");
-    adminDeletePass(week, pass, user, name, mobile, email, isAdminCheckBox2, stars);
+    adminDeletePass(
+      week,
+      pass,
+      user,
+      name,
+      mobile,
+      email,
+      isAdminCheckBox2,
+      stars
+    );
     window.location.reload();
   };
 
@@ -115,9 +134,6 @@ const AdminPanel = () => {
     <>
       <Header />
       <div className=" flex flex-col justify-center gap-5 text-xl mt-1 pb-10">
-        <div className=" text-center pt-2 font-bold text-2xl">
-          Lägg till ny medarbetare
-        </div>
         <NewUser setIsAdmin={setIsAdminCheckBox} isAdmin={isAdminCheckBox} />
         <div className=" text-center pt-2 font-bold text-2xl">Medarbetare</div>
         <Search />
@@ -134,42 +150,51 @@ const AdminPanel = () => {
           .map((item, i) =>
             edit == item.name ? (
               <div key={i} className="flex flex-col bg-white shadow-md">
-                <div className=" font-bold flex justify-between bg-purple_1 text-white p-3">
+                <div
+                  className={` font-bold flex justify-between  ${
+                    item.admin ? "bg-stone-800" : "bg-purple-900"
+                  } text-white p-3`}
+                >
                   <div className="flex items-center">
                     <p className="pr-2 ">{i + 1}.</p>
                     <input
-                      className="w-[60%] bg-purple_1"
+                      className="w-[70%] bg-stone-800 border p-1"
                       placeholder={item.name}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     ></input>
                   </div>
-                  <div className="flex gap-2 items-center justify-end">
-                    <input
-                      className="w-[50%] bg-purple_1"
-                      placeholder={item.mobile}
-                      value={mobile}
-                      onChange={(e) => setMobile(e.target.value)}
-                    ></input>
-                    <button
+                  <div className="flex gap-3 items-center justify-end">
+                    <IoIosSave
+                      size={30}
                       onClick={() => handleSave(item, false, false)}
-                      className=" px-3 py-1 rounded-md bg-green-500"
-                    >
-                      Spara
-                    </button>
+                      className=" text-green-500 cursor-pointer"
+                    />
+                    <LuUndo2
+                      size={30}
+                      className=" cursor-pointer"
+                      onClick={() => setEdit(false)}
+                    />
                     <FaRegTrashAlt
+                      size={30}
                       onClick={() => handleDelete(item.email)}
                       className="cursor-pointer text-red-500"
                     />
-                    <LuUndo2
-                      className="text-2xl cursor-pointer"
-                      onClick={() => setEdit(false)}
-                    />
                   </div>
                 </div>
-                <div className="flex justify-between px-3 py-2">
+                <div className="flex flex-col justify-between px-3 py-2">
+                  <p className="font-bold">Mobilnummer:</p>
+                  <input
+                    className="border rounded p-2"
+                    placeholder={item.mobile}
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                  ></input>
+                </div>
+                <div className="flex flex-col justify-between px-3 py-2">
                   <p className="font-bold">E-post:</p>
                   <input
+                    className="p-2 border rounded"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={item.email}
@@ -180,11 +205,13 @@ const AdminPanel = () => {
                   <p>
                     {isAdminCheckBox2 ? (
                       <MdOutlineCheckBox
+                        size={30}
                         onClick={() => setIsAdminCheckBox2(false)}
                         className="cursor-pointer text-2xl text-green-500"
                       />
                     ) : (
                       <MdOutlineCheckBoxOutlineBlank
+                        size={30}
                         onClick={() => setIsAdminCheckBox2(true)}
                         className="text-2xl cursor-pointer"
                       />
@@ -222,16 +249,15 @@ const AdminPanel = () => {
                 </div>
                 <div className="flex flex-wrap justify-between items-center px-3 py-2">
                   <p className="font-bold">Antal pass:</p>{" "}
-                  <div className="relative mr-1 text-yellow-300">
+                  <div className="relative  text-yellow-300">
                     <CiStar size={70} />
-                     <input
-                     className="bg-transparent absolute text-center pl-4 inset-0 pt-[2px] flex items-center justify-center text-black font-bold text-[15px] leading-none"
-                  value={stars}
-                  type="number"
-                  onChange={(e) => setStars(e.target.value)}
-                  placeholder={item.stars}
-                ></input>
-                   
+                    <input
+                      className="no-spin bg-transparent absolute inset-0 flex items-center justify-center text-center text-black font-bold text-[15px] leading-none"
+                      value={stars}
+                      type="number"
+                      onChange={(e) => setStars(e.target.value)}
+                      placeholder={item.stars}
+                    ></input>
                   </div>
                 </div>
               </div>
@@ -241,8 +267,8 @@ const AdminPanel = () => {
                 className=" flex flex-col bg-white shadow-md shadow-stone-700"
               >
                 <div
-                  className={` font-bold flex justify-between bg-purple_1  ${
-                    item.admin && "bg-gray-600"
+                  className={` font-bold flex justify-between  ${
+                    item.admin ? "bg-stone-800" : "bg-purple-900"
                   } text-white p-3`}
                 >
                   <div className=" flex items-center">
@@ -253,8 +279,8 @@ const AdminPanel = () => {
                     </p>
                   </div>
                   <div className="flex gap-4 items-center">
-                    <p data-name={item.mobile}>{item.mobile}</p>
                     <FaUserEdit
+                      size={30}
                       onClick={() =>
                         handleEdit(
                           item.admin,
@@ -264,32 +290,36 @@ const AdminPanel = () => {
                           item.stars
                         )
                       }
-                      className="text-2xl cursor-pointer"
+                      className=" cursor-pointer"
                     />
                     <FaRegTrashAlt
+                      size={30}
                       onClick={() => handleDelete(item.email)}
                       className="text-red-500 cursor-pointer"
                     />
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-between px-3 py-2">
+                <div className="flex flex-col justify-between px-3 py-2">
+                  <p className="font-bold">Mobilnummer:</p>{" "}
+                  <p className="p-2 w-full" data-name={item.mobile}>
+                    {item.mobile}
+                  </p>
+                </div>
+
+                <div className="flex flex-col justify-between px-3 py-2">
                   <p className="font-bold">E-post:</p>{" "}
-                  <p
-                    data-name={item.email}
-                    className="overflow-y-auto max-w-[241px]"
-                  >
+                  <p data-name={item.email} className="p-2">
                     {item.email}
                   </p>
                 </div>
                 <div className="flex justify-between px-3 py-2">
-                  <p className="font-bold">Admin:</p>{" "}
-                  <p>
-                    {item.admin ? (
-                      <MdOutlineCheckBox className="text-2xl text-green-500" />
-                    ) : (
-                      <MdOutlineCheckBoxOutlineBlank className="text-2xl" />
-                    )}
-                  </p>
+                  <p className="font-bold">Admin:</p>
+
+                  {item.admin ? (
+                    <MdOutlineCheckBox size={30} className=" text-green-500" />
+                  ) : (
+                    <MdOutlineCheckBoxOutlineBlank size={30} />
+                  )}
                 </div>
                 <p className="font-bold pl-3">Veckor:</p>
                 <div className="flex flex-col gap-3 px-3 py-2">
@@ -310,7 +340,7 @@ const AdminPanel = () => {
                 </div>
                 <div className="flex flex-wrap justify-between items-center px-3 py-2">
                   <p className="font-bold">Antal pass:</p>{" "}
-                  <div className="relative mr-1 text-yellow-300">
+                  <div className="relative text-yellow-300">
                     <CiStar size={70} />
                     <p className="absolute inset-0 pt-[2px] flex items-center justify-center text-black font-bold text-[15px] leading-none">
                       {item.stars}

@@ -9,22 +9,26 @@ const NewUser = ({ setIsAdmin, isAdmin }) => {
   return (
     <form
       action={createUser}
-      className="flex flex-col bg-white p-4 rounded-md shadow-md"
+      className="flex flex-col bg-white p-4 rounded-md shadow-md shadow-stone-800"
     >
-      <div className="font-bold flex justify-between bg-purple_1 text-white p-3 rounded-t-md">
+      <div className="font-bold flex justify-between bg-purple_1 text-white p-2 rounded-t-md">
         <input
-          className="w-[49%] bg-purple_1 focus:bg-purple_2 text-white outline-none"
+          className="w-full bg-purple_1 focus:bg-black/10 p-1 text-white outline-none"
           placeholder="Namn"
           name="name"
           required
         />
-        <input
-          className="w-[49%] bg-purple_1 focus:bg-purple_2 text-white text-right outline-none"
-          placeholder="Mobilnummer"
+       
+      </div>
+       <div className="flex flex-col justify-between px-3 py-2">
+        <p className="font-bold">Mobilnummer:</p>
+       <input
+          className="border rounded p-1"
+          placeholder="tex. 073..."
           name="mobile"
           required
         />
-      </div>
+          </div>
       <div className="flex flex-col justify-between px-3 py-2">
         <p className="font-bold">E-post:</p>
         <input
@@ -57,7 +61,7 @@ const NewUser = ({ setIsAdmin, isAdmin }) => {
         type="submit"
         className="mt-3 px-3 py-2 rounded-md bg-green-500 text-white font-bold hover:bg-green-600"
       >
-        Lägg till
+        Lägg till ny medarbetare
       </button>
     </form>
   );

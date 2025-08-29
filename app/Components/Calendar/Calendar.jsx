@@ -147,7 +147,6 @@ const Calendar = () => {
             }`}
             key={index}
           >
-
             <p data-name={participant.name} className="w-full">
               {participant.name}
             </p>
@@ -157,6 +156,7 @@ const Calendar = () => {
             )}
             {participant.name === user && (
               <div
+                title="Klicka här för att ta bort dig ifrån passet"
                 onClick={() =>
                   handleSchema(
                     setMessage,
@@ -166,19 +166,15 @@ const Calendar = () => {
                     user
                   )
                 }
-                className="cursor-pointer flex justify-end items-center h-12 w-full"
+                className="cursor-pointer flex justify-end items-center h-12"
               >
-                <p className="text-red-400 sm:text-[20px] text-[15px]">
+                <p className="text-red-400 sm:text-[20px] text-[15px] whitespace-nowrap overflow-hidden text-ellipsis">
                   Ta bort mig
                 </p>
-                <TiDelete
-                  title="Klicka här för att ta bort dig ifrån passet"
-                  className="text-red-400 text-3xl"
-                />
+                <TiDelete className="text-red-400 text-3xl" />
               </div>
-              
             )}
-                        {participant.name == user && (
+            {participant.name == user && (
               <AddMessageIcon
                 name={participant.name}
                 week={weekNumber}
