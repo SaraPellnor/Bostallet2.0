@@ -288,7 +288,7 @@ const Calendar = () => {
       {currentWeek != 52 && (
         <div className=" gradiantBg py-4">
           <p className="text-white text-2xl pl-3">{currentYear}</p>{" "}
-          <div className="flex justify-start mr-16 text-xl pt-2">
+          <div className="flex justify-start text-xl pt-2">
             <Search />
           </div>
         </div>

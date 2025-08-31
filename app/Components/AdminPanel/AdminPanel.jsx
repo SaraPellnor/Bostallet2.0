@@ -2,12 +2,13 @@
 import { LuUndo2 } from "react-icons/lu";
 import { CiStar } from "react-icons/ci";
 import { IoIosSave } from "react-icons/io";
-
 import {
   MdOutlineCheckBoxOutlineBlank,
   MdOutlineCheckBox,
 } from "react-icons/md";
 import { FaUserEdit, FaRegTrashAlt } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
+
 import { useUserContext } from "../../context/UserContext";
 import React, { useEffect, useState } from "react";
 import Loading from "../Loading/Loading";
@@ -21,6 +22,7 @@ import { redirect } from "next/navigation";
 import Header from "../Header/Header";
 import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 import Search from "../Search/Search";
+
 const AdminPanel = () => {
   const { setAdmin, loading, setLoading } = useUserContext();
   const [users, setUsers] = useState([]);
@@ -32,6 +34,8 @@ const AdminPanel = () => {
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [stars, setStars] = useState(0);
+
+  const [showNewUserModal, setShowNewUserModal] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -45,21 +49,19 @@ const AdminPanel = () => {
   };
 
   const fetchUser = async () => {
-    const loggedInUser = await checkUserStatus(); // Vänta på att Promiset löser sig
+    const loggedInUser = await checkUserStatus();
 
     if (!loggedInUser.admin) {
-      setAdmin(null); // Sätt det upplösta värdet i state
-      redirect(new URL("/", window.location.origin)); // Redirect
+      setAdmin(null);
+      redirect(new URL("/", window.location.origin));
     }
   };
 
-  // jag behöver skicka med nya value för user
   const deletePass = (week, pass, user) => {
     const confirmed = confirm(
       `Vill du radera medarbetarens pass ${pass} vecka ${week}? Det går inte att ångra!`
     );
     if (confirmed) {
-      // Användaren klickade på "Ok"
       adminDeletePass(
         week,
         pass,
@@ -71,11 +73,9 @@ const AdminPanel = () => {
         stars
       );
       window.location.reload();
-    } else {
-      // Användaren klickade på "Avbryt"
-      return;
     }
   };
+
   const handleEdit = (admin, name, mobile, email, stars) => {
     setName(name);
     setMobile(mobile);
@@ -87,10 +87,8 @@ const AdminPanel = () => {
     if (edit.length > 0) {
       const confirmed = confirm("Vill du spara påbörjad först?");
       if (confirmed) {
-        // Användaren klickade på "Ok"
         handleSave();
       } else {
-        // Användaren klickade på "Avbryt"
         return;
       }
       setEdit(name);
@@ -117,8 +115,6 @@ const AdminPanel = () => {
     if (confirmed) {
       deleteUser(email);
       window.location.reload();
-    } else {
-      return;
     }
   };
 
@@ -133,18 +129,48 @@ const AdminPanel = () => {
   ) : (
     <>
       <Header />
-      <div className=" flex flex-col justify-center gap-5 text-xl mt-1 pb-10 w-screen">
-        <NewUser setIsAdmin={setIsAdminCheckBox} isAdmin={isAdminCheckBox} />
-        <div className=" text-center pt-2 font-bold text-2xl">Medarbetare</div>
+      <div className="flex flex-col justify-center gap-5 text-xl mt-1 pb-10 w-screen">
+        <div className="text-center pt-2 font-bold text-2xl">Medarbetare</div>
+
+        <div className="text-center">
+          <button
+            onClick={() => setShowNewUserModal(true)}
+            className="inline-flex items-center gap-1 text-sm text-purple-700 font-medium hover:text-purple-900 hover:underline transition"
+          >
+            <span className="text-lg">＋</span> Lägg till ny medarbetare
+          </button>
+        </div>
+
+        {/* Modal */}
+        {showNewUserModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white rounded-2xl shadow-lg w-[90%] max-w-lg p-6 relative">
+              <button
+                onClick={() => setShowNewUserModal(false)}
+                className="absolute top-3 right-3 text-gray-500 hover:text-black"
+              >
+                <FaTimes size={24} />
+              </button>
+
+              <h2 className="text-xl font-bold mb-4">
+                Lägg till ny medarbetare
+              </h2>
+
+              <NewUser
+                setIsAdmin={setIsAdminCheckBox}
+                isAdmin={isAdminCheckBox}
+              />
+            </div>
+          </div>
+        )}
+
         <Search />
 
         {users
-          .slice() // gör en kopia av arrayen
+          .slice()
           .sort((a, b) => {
-            // 1. Sortera admin=true först
             if (a.admin && !b.admin) return -1;
             if (!a.admin && b.admin) return 1;
-            // 2. Om båda har samma adminstatus, sortera efter namn
             return a.name.localeCompare(b.name);
           })
           .map((item, i) =>
@@ -247,18 +273,15 @@ const AdminPanel = () => {
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-wrap justify-between items-center px-3 py-2">
-                  <p className="font-bold">Antal pass:</p>{" "}
-                  <div className="relative  text-yellow-300">
-                    <CiStar size={70} />
-                    <input
-                      className="no-spin bg-transparent absolute inset-0 flex items-center justify-center text-center text-black font-bold text-[15px] leading-none"
-                      value={stars}
-                      type="number"
-                      onChange={(e) => setStars(e.target.value)}
-                      placeholder={item.stars}
-                    ></input>
-                  </div>
+                <div className="flex justify-between items-center px-3 py-2">
+                  <p className="font-bold">Antal pass:</p>
+                  <input
+                    className=" text-black font-bold text-right"
+                    value={stars}
+                    type="number"
+                    onChange={(e) => setStars(e.target.value)}
+                    placeholder={item.stars}
+                  ></input>
                 </div>
               </div>
             ) : (
@@ -314,7 +337,6 @@ const AdminPanel = () => {
                 </div>
                 <div className="flex justify-between px-3 py-2">
                   <p className="font-bold">Admin:</p>
-
                   {item.admin ? (
                     <MdOutlineCheckBox size={30} className=" text-green-500" />
                   ) : (
@@ -340,12 +362,9 @@ const AdminPanel = () => {
                 </div>
                 <div className="flex flex-wrap justify-between items-center px-3 py-2">
                   <p className="font-bold">Antal pass:</p>{" "}
-                  <div className="relative text-yellow-300">
-                    <CiStar size={70} />
-                    <p className="absolute inset-0 pt-[2px] flex items-center justify-center text-black font-bold text-[15px] leading-none">
-                      {item.stars}
-                    </p>
-                  </div>
+                  <p className=" flex items-center justify-center text-black font-bold">
+                    {item.stars} st
+                  </p>
                 </div>
               </div>
             )
