@@ -38,16 +38,20 @@
 }
 html {
   scroll-behavior: smooth;
-  width: 100vw;
-  min-width: 372px;
 }
-body {
-    width: 100%;
 
+html, body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
 
 .gradiantBg {
   background: linear-gradient(to right, #7511be, #b414b3);

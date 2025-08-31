@@ -133,7 +133,7 @@ const AdminPanel = () => {
   ) : (
     <>
       <Header />
-      <div className=" flex flex-col justify-center gap-5 text-xl mt-1 pb-10 w-full">
+      <div className=" flex flex-col justify-center gap-5 text-xl mt-1 pb-10 w-screen">
         <NewUser setIsAdmin={setIsAdminCheckBox} isAdmin={isAdminCheckBox} />
         <div className=" text-center pt-2 font-bold text-2xl">Medarbetare</div>
         <Search />
