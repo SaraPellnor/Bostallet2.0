@@ -1,45 +1,31 @@
-"use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { MdOutlineInfo } from "react-icons/md";
 
 const InfoHeader = () => {
   const [visible, setVisible] = useState(false);
-  const [hapticsReady, setHapticsReady] = useState(false);
-  const prevVisible = useRef(false);
 
-  // första draget på skärmen – låser upp vibration
-  useEffect(() => {
-    const unlockHaptics = () => {
-      if (navigator.vibrate) {
-        navigator.vibrate(20); // kort test-vibration
-        setHapticsReady(true);
-      }
-      // ta bort listenern så det bara körs en gång
-      document.removeEventListener("touchmove", unlockHaptics);
-    };
-
-    document.addEventListener("touchmove", unlockHaptics, { once: true });
-
-    return () => document.removeEventListener("touchmove", unlockHaptics);
-  }, []);
-
-  // kolla scrollposition
   useEffect(() => {
     const handleScroll = () => {
-      setVisible(window.scrollY > 100);
+      // Visa header om man scrollat mer än 100px
+      if (window.scrollY > 100) {
+        // bara vibrera om vi går från false till true
+        setVisible((prev) => {
+          if (!prev) {
+            // vibrera en kort stund när den blir synlig
+            if (navigator.vibrate) {
+              navigator.vibrate(50); // 50 ms “lätt” vibration
+            }
+          }
+          return true;
+        });
+      } else {
+        setVisible(false);
+      }
     };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // trigga vibration när baren blir synlig
-  useEffect(() => {
-    if (visible && !prevVisible.current && hapticsReady) {
-      if (navigator.vibrate) navigator.vibrate(50); // lätt vibration när den dyker upp
-    }
-    prevVisible.current = visible;
-  }, [visible, hapticsReady]);
 
   return (
     <div
