@@ -7,18 +7,20 @@ const InfoHeader = () => {
   const [hapticsReady, setHapticsReady] = useState(false);
   const prevVisible = useRef(false);
 
-  // första trycket på skärmen – låser upp vibration
+  // första drag/touch på skärmen – låser upp vibration
   useEffect(() => {
     const unlockHaptics = () => {
       if (navigator.vibrate) {
         navigator.vibrate(20); // liten test-vibration
         setHapticsReady(true);
       }
-      document.removeEventListener("pointerdown", unlockHaptics);
+      // ta bort listenern så det bara körs en gång
+      document.removeEventListener("touchstart", unlockHaptics);
     };
 
-    document.addEventListener("pointerdown", unlockHaptics, { once: true });
-    return () => document.removeEventListener("pointerdown", unlockHaptics);
+    document.addEventListener("touchstart", unlockHaptics, { once: true });
+
+    return () => document.removeEventListener("touchstart", unlockHaptics);
   }, []);
 
   // kolla scrollposition
