@@ -12,9 +12,9 @@ const InfoHeader = () => {
         setVisible((prev) => {
           if (!prev) {
             // vibrera en kort stund när den blir synlig
-            if (navigator.vibrate) {
+            
               navigator.vibrate(50); // 50 ms “lätt” vibration
-            }
+            
           }
           return true;
         });
