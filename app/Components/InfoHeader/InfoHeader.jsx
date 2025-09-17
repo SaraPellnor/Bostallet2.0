@@ -12,9 +12,9 @@ const InfoHeader = () => {
         setVisible((prev) => {
           if (!prev) {
             // vibrera en kort stund när den blir synlig
-            
-              navigator.vibrate(50); // 50 ms “lätt” vibration
-            
+            if (navigator.vibrate) {
+              navigator.vibrate(200); // 200 ms “lätt” vibration
+            }
           }
           return true;
         });
@@ -35,7 +35,8 @@ const InfoHeader = () => {
     >
       <p>
         <MdOutlineInfo size={30} className="inline mb-1 mr-2 text-3xl" />
-        Nyhet i appen: Pratbubblan låter dig lämna och läsa meddelanden för varje pass.
+        Nyhet i appen: Pratbubblan låter dig lämna och läsa meddelanden för
+        varje pass.
       </p>
     </div>
   );
