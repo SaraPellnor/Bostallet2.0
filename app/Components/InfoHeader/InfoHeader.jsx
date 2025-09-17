@@ -8,16 +8,7 @@ const InfoHeader = () => {
     const handleScroll = () => {
       // Visa header om man scrollat mer än 100px
       if (window.scrollY > 100) {
-        // bara vibrera om vi går från false till true
-        setVisible((prev) => {
-          if (!prev) {
-            // vibrera en kort stund när den blir synlig
-            if (navigator.vibrate) {
-              navigator.vibrate(50); // 50 ms “lätt” vibration
-            }
-          }
-          return true;
-        });
+        setVisible(true);
       } else {
         setVisible(false);
       }
