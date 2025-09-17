@@ -18,9 +18,9 @@ const InfoHeader = () => {
       // document.removeEventListener("touchstart", unlockHaptics);
     };
 
-    document.addEventListener("touchstart", unlockHaptics, { once: true });
+    document.addEventListener("drag", unlockHaptics, { once: true });
 
-    return () => document.removeEventListener("touchstart", unlockHaptics);
+    return () => document.removeEventListener("drag", unlockHaptics);
   }, []);
 
   // kolla scrollposition
