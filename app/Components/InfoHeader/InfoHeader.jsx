@@ -15,7 +15,7 @@ const InfoHeader = () => {
         setHapticsReady(true);
       }
       // ta bort listenern så det bara körs en gång
-      document.removeEventListener("touchstart", unlockHaptics);
+      // document.removeEventListener("touchstart", unlockHaptics);
     };
 
     document.addEventListener("touchstart", unlockHaptics, { once: true });
