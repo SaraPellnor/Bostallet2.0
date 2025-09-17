@@ -1,31 +1,53 @@
-import React, { useState, useEffect } from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineInfo } from "react-icons/md";
 
 const InfoHeader = () => {
   const [visible, setVisible] = useState(false);
+  const [hapticsAllowed, setHapticsAllowed] = useState(false);
+  const prevVisible = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Visa header om man scrollat mer än 100px
-      if (window.scrollY > 100) {
-        // bara vibrera om vi går från false till true
-        setVisible((prev) => {
-          if (!prev) {
-            // vibrera en kort stund när den blir synlig
-            if (navigator.vibrate) {
-              navigator.vibrate(200); // 200 ms “lätt” vibration
-            }
-          }
-          return true;
-        });
-      } else {
-        setVisible(false);
-      }
-    };
+    // återställ från localStorage (om användaren tidigare aktiverat haptics)
+    try {
+      setHapticsAllowed(localStorage.getItem("hapticsAllowed") === "1");
+    } catch {}
 
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      setVisible(window.scrollY > 100);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    // trigga vibration endast när visible går från false -> true
+    if (!prevVisible.current && visible) {
+      if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
+        if (hapticsAllowed) {
+          try {
+            navigator.vibrate(50); // lätt, kort vibration
+            console.log("vibrate anropades");
+          } catch (e) {
+            console.warn("vibrate error", e);
+          }
+        } else {
+          console.log("vibrate stöds men användaren har inte aktiverat haptics");
+        }
+      } else {
+        console.log("vibrate inte stödd i denna browser/enhet");
+      }
+    }
+    prevVisible.current = visible;
+  }, [visible, hapticsAllowed]);
+
+  const enableHaptics = () => {
+    setHapticsAllowed(true);
+    try { localStorage.setItem("hapticsAllowed", "1"); } catch {}
+    // gör en kort test-vibration så browser "fångar" user gesture
+    if (navigator.vibrate) navigator.vibrate(30);
+  };
 
   return (
     <div
@@ -33,11 +55,19 @@ const InfoHeader = () => {
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      <p>
+      <p className="flex items-center">
         <MdOutlineInfo size={30} className="inline mb-1 mr-2 text-3xl" />
-        Nyhet i appen: Pratbubblan låter dig lämna och läsa meddelanden för
-        varje pass.
+        Nyhet i appen: Pratbubblan låter dig lämna och läsa meddelanden för varje pass.
       </p>
+
+      {!hapticsAllowed && (
+        <button
+          onClick={enableHaptics}
+          className="ml-auto bg-white/10 px-3 py-1 rounded text-sm"
+        >
+          Aktivera lätt vibration
+        </button>
+      )}
     </div>
   );
 };
