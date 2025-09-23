@@ -1,6 +1,6 @@
 {
-  "name": "Bostället2.0",
-  "short_name": "Bostället2.0",
+  "name": "MyWebSite",
+  "short_name": "MySite",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
