@@ -62,6 +62,7 @@ export const POST = async (req) => {
       email: email,
       mobile: mobile,
       weeks: [],
+      stars: 0,
     };
 
     // Spara till databasen

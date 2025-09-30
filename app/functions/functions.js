@@ -125,7 +125,7 @@ export const fetchData = async (setLoading, setUserData) => {
   setLoading(false);
 };
 
-export const handleSchema = async (setMessage, week, pass, action, user) => {
+export const handleSchema = async (setMessage, week, pass, action, user, year) => {
   try {
     const res = await fetch("/api/calendar/", {
       method: "PUT",
@@ -137,6 +137,7 @@ export const handleSchema = async (setMessage, week, pass, action, user) => {
         week: week,
         pass: pass,
         action: action,
+        year: year,
       }), // Skicka e-postadressen
     });
 

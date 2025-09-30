@@ -20,6 +20,7 @@ import Search from "../Search/Search";
 import AddMessageIcon from "../AddMessageIcon/AddMessageIcon";
 import MessageIcon from "../MessageIcon/MessageIcon";
 import InfoHeader from "../InfoHeader/InfoHeader";
+
 const Calendar = () => {
   const {
     user,
@@ -33,54 +34,53 @@ const Calendar = () => {
     fridaysArray,
     currentYear,
     hollidays,
-    currentDay,
     setHollidays,
   } = useUserContext();
+
+  const [showConfetti, setShowConfetti] = useState(false);
+
   // Hämta schemat från API
   useEffect(() => {
-    removeOldWeeks(getISOWeek(new Date()));
+    // removeOldWeeks(getISOWeek(new Date()));
     setHollidays(childrenHolidayWeeks);
     fetchData(setLoading, setUserData);
   }, [message]);
-  const [showconfetti, setshowConfetti] = useState(false);
-  const handleAdd = (
-    passCount,
-    setMessage,
-    weekNumber,
-    passNumber,
-    userIn,
-    user
-  ) => {
-    passCount > 2 && setshowConfetti(true);
-    const timer = setTimeout(() => {
-      setshowConfetti(false);
-    }, 2000);
 
+  const handleAdd = (passCount, weekNumber, passNumber, userIn) => {
+    if (passCount > 2) setShowConfetti(true);
+    const timer = setTimeout(() => setShowConfetti(false), 2000);
+const year = weekNumber< currentWeek ? currentYear + 1: currentYear; // <-- lägg till detta
     handleSchema(
       setMessage,
       weekNumber,
       passNumber,
       userIn ? "remove" : "add",
-      user
+      user,
+      year // <-- skicka med year
     );
+
     timer();
   };
 
   // Rendera en cell för ett specifikt pass
-  const renderPassCell = (weekNumber, passNumber) => {
+  const renderPassCell = (weekNumber, passNumber, year) => {
     let passCount = 0;
     let userIn = false;
-
+    console.log(year, currentYear);
+// försöker lägga in year som är samma som cellen ska vara, och den är det enligt loggen men det fungerar inte i filter ändå.
+// Det var fel i databasen, därför det inte fungerade med includes. det bör fungera nu :) 
     const participants = userData.flatMap((element) => {
       return element.weeks
         .filter(
-          (week) => week.week === weekNumber && week.pass.includes(passNumber)
+          (week) =>
+            week.week === weekNumber &&
+            week.pass.includes(passNumber) &&
+            week.year === year
         )
         .map((week) => {
           if (element.name === user) userIn = true;
           passCount++;
 
-          // Hämta meddelandet för aktuell vecka + pass
           const messageObj = week.messages
             ? week.messages.find((msg) => msg.pass === passNumber)
             : null;
@@ -88,7 +88,7 @@ const Calendar = () => {
           return {
             name: element.name,
             stars: element.stars,
-            message: messageObj ? messageObj.message : null, // skicka bara texten
+            message: messageObj ? messageObj.message : null,
           };
         });
     });
@@ -100,10 +100,10 @@ const Calendar = () => {
           (passNumber === 2 && passCount > 3)
             ? "opacity-35"
             : ""
-        } pb-5 px-5 py-3`}
+        }`}
       >
         <div className="bg-purple_2 rounded-lg w-full px-2 py-1 flex justify-between">
-          {passNumber == 1 ? (
+          {passNumber === 1 ? (
             <>
               <p>PASS 1</p>
               <p>18.00-20.00</p>
@@ -115,21 +115,15 @@ const Calendar = () => {
             </>
           )}
         </div>
+
         {!userIn &&
-          ((passNumber == 1 && passCount < 4) ||
-            (passNumber == 2 && passCount < 4)) && (
+          ((passNumber === 1 && passCount < 4) ||
+            (passNumber === 2 && passCount < 4)) && (
             <button
               onClick={() =>
-                handleAdd(
-                  passCount,
-                  setMessage,
-                  weekNumber,
-                  passNumber,
-                  userIn,
-                  user
-                )
+                handleAdd(passCount, weekNumber, passNumber, userIn)
               }
-              className=" w-full flex items-center h-12 p-1 border-b-2 border-gray-700"
+              className="w-full flex items-center h-12 p-1 border-b-2 border-gray-700"
             >
               <p className="text-green-400 sm:text-[20px] text-[15px]">
                 Lägg till mig
@@ -140,6 +134,7 @@ const Calendar = () => {
               />
             </button>
           )}
+
         {participants.map((participant, index) => (
           <div
             className={`flex items-center py-1 border-b-2 border-gray-700 ${
@@ -151,9 +146,10 @@ const Calendar = () => {
               {participant.name}
             </p>
 
-            {participant.message && participant.name != user && (
+            {participant.message && participant.name !== user && (
               <MessageIcon existingMessage={participant.message} />
             )}
+
             {participant.name === user && (
               <div
                 title="Klicka här för att ta bort dig ifrån passet"
@@ -162,8 +158,9 @@ const Calendar = () => {
                     setMessage,
                     weekNumber,
                     passNumber,
-                    userIn ? "remove" : "add",
-                    user
+                    "remove",
+                    user,
+                    year // <-- skicka med year
                   )
                 }
                 className="cursor-pointer flex justify-end items-center h-12"
@@ -174,7 +171,8 @@ const Calendar = () => {
                 <TiDelete className="text-red-400 text-3xl" />
               </div>
             )}
-            {participant.name == user && (
+
+            {participant.name === user && (
               <AddMessageIcon
                 name={participant.name}
                 week={weekNumber}
@@ -201,9 +199,10 @@ const Calendar = () => {
   const generateRows = () => {
     return Array.from({ length: 26 }, (_, i) => {
       const weekNumber = ((currentWeek + i - 1) % 52) + 1;
+      const year = weekNumber < currentWeek ? currentYear + 1 : currentYear; // <-- lägg till detta
       return (
         <div className="mb-6" key={weekNumber}>
-          {weekNumber == 1 && i > 0 && (
+          {weekNumber === 1 && i > 0 && (
             <p className="gradiantBg p-4 text-white text-2xl">
               {currentYear + 1}
             </p>
@@ -213,35 +212,28 @@ const Calendar = () => {
             className={`text-white text-xl bg-black shadow-xl shadow-black/70 rounded-b-md ${
               i === 0 || weekNumber === 1 ? "" : " rounded-t-md"
             }`}
-            key={weekNumber}
           >
             <div className="text-2xl font-bold">
               {hollidays.some(
                 (item) =>
-                  item.fact.week == weekNumber && item.fact.year == currentYear
+                  item.fact.week === weekNumber &&
+                  item.fact.year === currentYear
               ) ? (
                 hollidays
                   .filter(
                     (item) =>
-                      item.fact.week == weekNumber &&
-                      item.fact.year == currentYear
+                      item.fact.week === weekNumber &&
+                      item.fact.year === currentYear
                   )
                   .map((item, index) => (
                     <div className="p-3" key={index}>
                       <div className="flex gap-2 items-end">
-                        {" "}
                         <p data-name={weekNumber}> Fredag V. {weekNumber}</p>
-                        <p
-                          data-name={fridaysArray[i]}
-                          className="text-lg text-blue-200"
-                        >
+                        <p data-name={fridaysArray[i]} className="text-lg text-blue-200">
                           {fridaysArray[i]}
                         </p>
                       </div>
-                      <p
-                        data-name={item.holiday}
-                        className="text-blue-400 font-thin"
-                      >
+                      <p data-name={item.holiday} className="text-blue-400 font-thin">
                         {item.holiday}
                       </p>
                     </div>
@@ -249,18 +241,15 @@ const Calendar = () => {
               ) : (
                 <div className="p-3 flex gap-2 items-end">
                   <p data-name={weekNumber}>Fredag V. {weekNumber}</p>
-                  <p
-                    data-name={fridaysArray[i]}
-                    className="text-lg text-green-200"
-                  >
+                  <p data-name={fridaysArray[i]} className="text-lg text-green-200">
                     {fridaysArray[i]}
                   </p>
                 </div>
               )}
             </div>
 
-            {renderPassCell(weekNumber, 1)}
-            {renderPassCell(weekNumber, 2)}
+            {renderPassCell(weekNumber, 1, year)}
+            {renderPassCell(weekNumber, 2, year)}
           </div>
         </div>
       );
@@ -273,11 +262,11 @@ const Calendar = () => {
     <div className="relative w-full max-w-[800px] h-full flex flex-col">
       <div
         className={`fixed inset-0 flex items-center justify-center w-full h-full z-[1] ${
-          showconfetti ? "" : "hidden"
+          showConfetti ? "" : "hidden"
         }`}
       >
         <Image
-          src={showconfetti && confetti}
+          src={showConfetti && confetti}
           alt="Confetti"
           className="w-2/3 h-2/3 object-contain"
         />
@@ -285,18 +274,14 @@ const Calendar = () => {
       <InfoHeader />
 
       <Header />
-      {currentWeek != 52 && (
-        <div className=" gradiantBg py-4">
-          <p className="text-white text-2xl pl-3">{currentYear}</p>{" "}
+      {currentWeek !== 52 && (
+        <div className="gradiantBg py-4">
+          <p className="text-white text-2xl pl-3">{currentYear}</p>
           <div className="flex justify-start text-xl pt-2">
             <Search />
           </div>
         </div>
       )}
-      {/* <div className="flex justify-start my-4 mx-6">
-        
-        <Search />
-      </div> */}
       {generateRows()}
       <ScrollToTopButton />
     </div>

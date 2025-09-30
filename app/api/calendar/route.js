@@ -38,7 +38,8 @@ export const GET = async (req) => {
 };
 
 export const PUT = async (req) => {
-  const { name, week, pass, action } = await req.json();
+  const { name, week, pass, action, year } = await req.json();
+  
 
   try {
     const client = await clientPromise;
@@ -54,7 +55,10 @@ export const PUT = async (req) => {
       );
     }
 
-    const weekIndex = user.weeks.findIndex((w) => w.week === week);
+    // ändra så att vi letar på både week och year
+    const weekIndex = user.weeks.findIndex(
+      (w) => w.week === week && w.year === year
+    );
 
     if (action === "remove") {
       if (weekIndex !== -1) {
@@ -73,12 +77,12 @@ export const PUT = async (req) => {
         await collection.updateOne({ name }, [
           {
             $set: {
-              weeks: user.weeks, // uppdaterar weeks
+              weeks: user.weeks,
               stars: {
                 $cond: [
-                  { $gt: ["$stars", 0] }, // om stars > 0
-                  { $subtract: ["$stars", 1] }, // minska med 1
-                  0, // annars sätt till 0
+                  { $gt: ["$stars", 0] },
+                  { $subtract: ["$stars", 1] },
+                  0,
                 ],
               },
             },
@@ -96,8 +100,8 @@ export const PUT = async (req) => {
       }
     } else if (action === "add") {
       if (weekIndex === -1) {
-        // Veckan finns inte, lägg till ny vecka med pass
-        user.weeks.push({ week, pass: [pass] });
+        // Veckan finns inte, lägg till ny vecka med pass och year
+        user.weeks.push({ year, week, pass: [pass] });
       } else {
         const existingPasses = user.weeks[weekIndex].pass;
         if (!existingPasses.includes(pass)) {
@@ -144,6 +148,7 @@ export const PUT = async (req) => {
 };
 
 
+
 export async function POST(req) {
   try {
     const { name, message, week, passNumber } = await req.json();
@@ -166,28 +171,28 @@ export async function POST(req) {
         }
       );
     } else {
-      // Skapa messages-array om den saknas i veckan
-      await collection.updateOne(
-        { name, "weeks.week": week, "weeks.messages": { $exists: false } },
-        { $set: { "weeks.$.messages": [] } }
+      // Kolla om det redan finns ett meddelande för just passet
+      const existing = await collection.findOne(
+        { name, "weeks.week": week, "weeks.messages.pass": passNumber },
+        { projection: { "weeks.$": 1 } }
       );
 
-      // Försök uppdatera befintligt message för passet
-      const result = await collection.updateOne(
-        { name },
-        {
-          $set: { "weeks.$[w].messages.$[m].message": message }
-        },
-        {
-          arrayFilters: [
-            { "w.week": week },
-            { "m.pass": passNumber }
-          ]
-        }
-      );
-
-      // Om inget message fanns → lägg till nytt
-      if (result.modifiedCount === 0) {
+      if (existing) {
+        // Uppdatera befintligt message
+        await collection.updateOne(
+          { name },
+          {
+            $set: { "weeks.$[w].messages.$[m].message": message }
+          },
+          {
+            arrayFilters: [
+              { "w.week": week },
+              { "m.pass": passNumber }
+            ]
+          }
+        );
+      } else {
+        // Lägg till nytt message i veckans array
         await collection.updateOne(
           { name, "weeks.week": week },
           {
