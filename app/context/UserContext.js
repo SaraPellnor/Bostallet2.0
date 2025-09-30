@@ -9,6 +9,8 @@ import {
   getWeekYear,
   isFriday,
   nextFriday,
+  subWeeks, 
+  previousFriday,
 } from "date-fns";
 const UserContext = createContext();
 
@@ -31,6 +33,8 @@ export const UserProvider = ({ children }) => {
   const [hollidays, setHollidays] = useState([]);
   const [admin, setAdmin] = useState(false);
   const [fridaysArray, setFridaysArray] = useState([]); // Ny state för fredagar
+  const [previousFridaysArray, setPreviousFridaysArray] = useState([]); // Ny state för tidigare fredagar
+  const [showOldWeeks, setShowOldWeeks] = useState(false);
 
   function getNext30Fridays() {
     const today = new Date();
@@ -45,6 +49,23 @@ export const UserProvider = ({ children }) => {
     return fridaysArray;
   }
 
+
+function getPrevious30Fridays() {
+  const today = new Date();
+  // Börja från idag om fredag, annars senaste fredag
+  const startDate = isFriday(today) ? today : previousFriday(today);
+  const fridaysArray = [];
+
+  for (let i = 0; i < 51; i++) {
+    const currentFriday = subWeeks(startDate, i);
+    fridaysArray.push(format(currentFriday, "d/M"));
+  }
+
+  // Vänd på arrayen så äldst kommer först
+  return fridaysArray;
+}
+
+
   useEffect(() => {
     async function checkUser() {
       const logedinUser = await checkUserStatus(); // Exempel på async-funktion
@@ -57,6 +78,7 @@ export const UserProvider = ({ children }) => {
     }
     checkUser();
     setFridaysArray(getNext30Fridays());
+    setPreviousFridaysArray(getPrevious30Fridays());
   }, []);
 
   return (
@@ -87,6 +109,9 @@ export const UserProvider = ({ children }) => {
         currentDay,
         setCurrentDay,
         fridaysArray,
+        showOldWeeks,
+        setShowOldWeeks,
+        previousFridaysArray
       }}
     >
       {children}

@@ -36,6 +36,15 @@ const AdminPanel = () => {
   const [stars, setStars] = useState(0);
 
   const [showNewUserModal, setShowNewUserModal] = useState(false);
+const currentYear = new Date().getFullYear();
+const currentWeek = (() => {
+  const oneJan = new Date(new Date().getFullYear(), 0, 1);
+  const numberOfDays = Math.floor(
+    (new Date() - oneJan) / (24 * 60 * 60 * 1000)
+  );
+  return Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
+})();
+console.log(currentWeek, currentYear);
 
   const fetchData = async () => {
     try {
@@ -245,34 +254,46 @@ const AdminPanel = () => {
                   </p>
                 </div>
                 <p className="font-bold pl-3">Veckor:</p>
-                <div className="flex flex-col gap-3 justify-end px-3 py-2">
-                  {item.weeks.map((week, i) => (
-                    <div
-                      key={i}
-                      className=" flex flex-col gap-1 p-2 bg-black bg-opacity-80 text-white "
-                    >
-                      <p>V. {week.week}</p>
-                      {week.pass.find((item) => item == 1) && (
-                        <div
-                          onClick={() => deletePass(week.week, 1, item)}
-                          className="cursor-pointer p-1 bg-red-500 flex justify-between items-center px-3"
-                        >
-                          <p> Pass 1 </p>
-                          <FaRegTrashAlt />
-                        </div>
-                      )}
-                      {week.pass.find((item) => item == 2) && (
-                        <div
-                          onClick={() => deletePass(week.week, 2, item)}
-                          className="cursor-pointer p-1 bg-red-500 flex justify-between items-center px-3"
-                        >
-                          <p> Pass 2 </p>
-                          <FaRegTrashAlt />
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+<div className="flex flex-col gap-3 justify-end px-3 py-2">
+  {item.weeks.map((week, i) => {
+    const year = week.year; // antar att varje week-objekt har year-property
+
+    if (
+      (week.week >= currentWeek && year === currentYear) ||
+      (week.week < currentWeek && year === currentYear + 1)
+    ) {
+      return (
+        <div
+          key={i}
+          className="flex flex-col gap-1 p-2 bg-black bg-opacity-80 text-white"
+        >
+          <p>V. {week.week}</p>
+          {week.pass.includes(1) && (
+            <div
+              onClick={() => deletePass(week.week, 1, item)}
+              className="cursor-pointer p-1 bg-red-500 flex justify-between items-center px-3"
+            >
+              <p> Pass 1 </p>
+              <FaRegTrashAlt />
+            </div>
+          )}
+          {week.pass.includes(2) && (
+            <div
+              onClick={() => deletePass(week.week, 2, item)}
+              className="cursor-pointer p-1 bg-red-500 flex justify-between items-center px-3"
+            >
+              <p> Pass 2 </p>
+              <FaRegTrashAlt />
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  })}
+</div>
+
                 <div className="flex justify-between items-center px-3 py-2">
                   <p className="font-bold">Antal pass:</p>
                   <input
@@ -344,22 +365,34 @@ const AdminPanel = () => {
                   )}
                 </div>
                 <p className="font-bold pl-3">Veckor:</p>
-                <div className="flex flex-col gap-3 px-3 py-2">
-                  {item.weeks.map((week, i) => (
-                    <div
-                      key={i}
-                      className=" flex flex-col gap-1 p-2 bg-black text-white "
-                    >
-                      <p>V. {week.week}</p>
-                      {week.pass.find((item) => item == 1) && (
-                        <p className="p-1 bg-green-500">Pass 1</p>
-                      )}
-                      {week.pass.find((item) => item == 2) && (
-                        <p className="p-1 bg-green-500">Pass 2</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
+  <div className="flex flex-col gap-3 px-3 py-2">
+  {item.weeks.map((week, i) => {
+    const year = week.year; // anta att varje week-objekt har year-property
+
+    if (
+      (week.week >= currentWeek && year === currentYear) ||
+      (week.week < currentWeek && year === currentYear + 1)
+    ) {
+      return (
+        <div
+          key={i}
+          className="flex flex-col gap-1 p-2 bg-black text-white"
+        >
+          <p>V. {week.week}</p>
+          {week.pass.includes(1) && (
+            <p className="p-1 bg-green-500">Pass 1</p>
+          )}
+          {week.pass.includes(2) && (
+            <p className="p-1 bg-green-500">Pass 2</p>
+          )}
+        </div>
+      );
+    }
+
+    return null; // annars rendera inget
+  })}
+</div>
+
                 <div className="flex flex-wrap justify-between items-center px-3 py-2">
                   <p className="font-bold">Antal pass:</p>{" "}
                   <p className=" flex items-center justify-center text-black font-bold">
