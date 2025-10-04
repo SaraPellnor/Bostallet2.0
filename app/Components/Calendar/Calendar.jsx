@@ -20,8 +20,6 @@ import { set } from "date-fns";
 import { useRef } from "react";
 
 const Calendar = () => {
-  const divRef = useRef(null);
-
   const {
     admin,
     user,
@@ -66,14 +64,20 @@ const Calendar = () => {
     timer();
   };
 
+  const divRef = useRef(null);
+
   const handleShowPreviousShifts = () => {
     setShowOldWeeks(!showOldWeeks);
-
-    setTimeout(() => {
-      if (divRef.current) {
-        divRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-      }
-    }, 0);
+    console.log(showOldWeeks);
+    if (showOldWeeks === false) {
+      setTimeout(() => {
+        if (divRef.current) {
+          divRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+      }, 0);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   // Rendera en cell för ett specifikt pass
@@ -329,23 +333,22 @@ const Calendar = () => {
           <div className="flex flex-col items-start text-xl pt-2">
             <Search />
             {admin && (
-             <div
-  className={`text-black flex justify-center items-center gap-2 p-2 mt-4 rounded-lg cursor-pointer m-auto
+              <div
+                className={`text-black flex justify-center items-center gap-2 p-2 mt-4 rounded-lg cursor-pointer m-auto
     ${
       showOldWeeks
         ? "fixed bottom-5 left-5 z-10 text-white backdrop-blur-md hover:scale-110 duration-300"
         : ""
     }`}
->
-  <MdKeyboardDoubleArrowLeft />
-  <span
-    onClick={handleShowPreviousShifts}
-    className="cursor-pointer inline-block whitespace-nowrap"
-  >
-    {showOldWeeks ? "Dölj tidigare pass" : "Visa tidigare pass"}
-  </span>
-</div>
-
+              >
+                <MdKeyboardDoubleArrowLeft />
+                <span
+                  onClick={handleShowPreviousShifts}
+                  className="cursor-pointer inline-block whitespace-nowrap"
+                >
+                  {showOldWeeks ? "Dölj tidigare pass" : "Visa tidigare pass"}
+                </span>
+              </div>
             )}
           </div>
         </div>
